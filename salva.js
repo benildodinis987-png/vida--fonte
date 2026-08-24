@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================
 
     if (localStorage.getItem("logado") !== "true") {
-        window.location.href = "Login%202.js.html";
+        window.location.href = "index.html";
         return;
     }
 
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.removeItem("logado");
 
         // Voltar para o login
-        window.location.href = "Login%202.js.html";
+        window.location.href = "index.html";
     });
 
 });
