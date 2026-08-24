@@ -35,5 +35,5 @@ function registrar() {
     alert("Cadastro realizado com sucesso!");
 
     // Redireccionar depois de guardar
-    window.location.href = "Login%202.js.html";
+    window.location.href = "index.html";
 }
