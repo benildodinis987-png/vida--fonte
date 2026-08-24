@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acessibilidade - Plataforma Vidafonte</title>
+    <link rel="stylesheet" href="style-acessibilidade.css">
+    <!-- Ícones (FontAwesome) -->
+    <link rel="stylesheet" href="acessibilidade.css">
+</head>
+<body>
+
+    <main class="acessibilidade-container">
+        <!-- Cabeçalho -->
+        <header class="acessibilidade-header">
+            <h1>Central de Acessibilidade</h1>
+            <p class="subtitle">Personalize a sua experiência de navegação na Vidafonte para torná-la mais confortável[cite: 1].</p>
+        </header>
+
+        <div class="acessibilidade-grid">
+            <!-- Coluna 1: Ferramentas Rápidas -->
+            <div class="ferramentas-box">
+                <h2>Ajustes Visuais Dinâmicos</h2>
+                <p>Use os controlos abaixo para alterar a aparência do sistema em tempo real:</p>
+
+                <div class="control-group">
+                    <span class="control-label"><i class="fa-solid fa-text-height"></i> Tamanho do Texto</span>
+                    <div class="btn-flex">
+                        <button onclick="alterarFonte('diminuir')" class="acc-btn"><i class="fa-solid fa-minus"></i> Diminuir</button>
+                        <button onclick="alterarFonte('normal')" class="acc-btn btn-secondary">Normal</button>
+                        <button onclick="alterarFonte('aumentar')" class="acc-btn"><i class="fa-solid fa-plus"></i> Aumentar</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <span class="control-label"><i class="fa-solid fa-circle-half-stroke"></i> Alto Contraste</span>
+                    <p class="control-desc">Melhora a leitura para pessoas com baixa visão ou sob luz solar forte.</p>
+                    <button onclick="toggleContraste()" class="acc-btn btn-block"><i class="fa-solid fa-eye"></i> Ativar / Desativar Alto Contraste</button>
+                </div>
+
+                <div class="control-group">
+                    <span class="control-label"><i class="fa-solid fa-font"></i> Fonte para Dislexia</span>
+                    <p class="control-desc">Muda o estilo da letra para uma fonte de leitura mais fácil.</p>
+                    <button onclick="toggleFonteDislexia()" class="acc-btn btn-block"><i class="fa-solid fa-font-awesome"></i> Alternar Tipo de Fonte</button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Compromisso e Instruções -->
+            <div class="compromisso-box">
+                <h2>O Nosso Compromisso</h2>
+                <p>A Vidafonte tem como pilar a inclusão social e comunitária[cite: 1]. Sabemos que o acesso à informação nutricional e aos canais de monitoramento infantil deve ser universal[cite: 1].</p>
+                
+                <h3>Teclas de Atalho de Navegação (Acessibilidade por Teclado)</h3>
+                <ul class="atalhos-list">
+                    <li><kbd>Tab</kbd> : Navega entre os links e botões do menu.</li>
+                    <li><kbd>Enter</kbd> / <kbd>Espaço</kbd> : Ativa o botão ou link selecionado.</li>
+                    <li><kbd>Seta para Baixo/Cima</kbd> : Rola a página suavemente.</li>
+                </ul>
+
+                <div class="feedback-callout">
+                    <h4>Encontrou alguma barreira?</h4>
+                    <p>Se tiver dificuldades em ler ou interagir com alguma funcionalidade (como o Quiz ou o Sistema de Denúncias), use a nossa página de feedback para nos reportar[cite: 1].</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script Simples para Testar as Funcionalidades na Hora -->
+    <script src="scrii.js"></script>
+</body>
+</html>

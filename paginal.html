@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDAFONTE</title>
+    <link rel="stylesheet" href="paaa.css">
+
+</head>
+
+<body>
+
+    <!--Anuncio-->
+
+    <!-- ANUNCIO -->
+    <div id="adOverlay">
+        <video id="adVideo" autoplay muted>
+        <source src="WhatsApp Video 2026-02-19 at 16.12.15.mp4" type="video/mp4">
+    </video>
+
+        <button id="closeAd">✖</button>
+    </div>
+
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">
+                <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif">
+                <div>
+                    <strong>VIDAFONTE</strong><br>
+                    <small>A vida e a fonte de tudo que alimenta</small>
+                </div>
+            </div>
+
+         
+
+           <div class="menu-container">
+    <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
+
+    <div class="dropdown" id="menu">
+        <a href="cooonver.html"> Assistente IA</a>
+        <a href="puto.html"> perfil</a>
+        <a href="difinicoes.html"> Definições</a>
+        <a href="acessibilidade.html"> Acessibilidade</a>
+        <a href="feedback.html"> Feedback</a>
+        <a href="Denuncia.html"> Denúncia</a>
+        <a href="sobree.html">ℹ Sobre</a>
+        <a href="Login 2.js.html"> Sair da Conta</a>
+    </div>
+            </div>
+        </div>
+
+        <!-- para baner BANNER -->
+        <div class="banner">
+            <div class="banner-text">
+                <h2>Saúde publica e Nutriçao infantil.</h2>
+                <p>Proteja tua Criança!<br>Hiwora thi wela!</p>
+            </div>
+        </div>
+
+        <!-- Botoes de funcionalidades -->
+        <div class="actions">
+            <a href="Comprar.html"><button class="action-box blue" onclick="acao('Comprar Senha')">
+                Comprar Senha
+            </button></a>
+
+            <a href="Medir.html"><button class="action-box green" onclick="acao('Medir Criança')">
+                Medir o estado da Criança
+            </button></a>
+
+            <a href="aprender.html"><button class="action-box orange" onclick="acao('Aprender (Quiz)')">
+                Aprender (Quiz)
+            </button></a>
+        </div>
+
+        <!-- Alertas -->
+        <div class="alerta-section" id="real">
+            <div class="alert-title"> 🚨Notificações de Saúde Urgentes</div>
+            <div class="alert-box">
+                <strong>⚠️ Alerta!</strong> Vacina do seu bebê está em atraso.
+                <br>Clique aqui para agendar!
+            </div>
+        </div>
+
+         <!-- caixa de funcionalidae -->
+          
+        <h2 class="seccao-titulo"> Aprenda Mais </h2>
+
+        <div class="grid-videos">
+
+            <!-- Card 1 -->
+            <div class="card-yt" onclick="irParaPlayer('hospital.mp4', 'Casos de Nutrição Infantil')">
+                <div class="thumbnail-container">
+                    <video muted preload="metadata">
+                        <source src="hospital.mp4" type="video/mp4">
+                    </video>
+                    <div class="play-overlay"></div>
+                </div>
+                <div class="info-container">
+                    <div class="avatar-canal">VF</div>
+                    <div class="detalhes-video">
+                        <h3>Casos de Nutrição Infantil</h3>
+                        <p>Saúde Comunitária</p>
+                        <p class="meta-dados">10 mil visualizações • há 2 dias</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card-yt" onclick="irParaPlayer('nut.mp4', 'Como cuidar da tua família')">
+                <div class="thumbnail-container">
+                    <video muted preload="metadata">
+                        <source src="nut.mp4" type="video/mp4">
+                    </video>
+                    <div class="play-overlay"></div>
+                </div>
+                <div class="info-container">
+                    <div class="avatar-canal">VF</div>
+                    <div class="detalhes-video">
+                        <h3>Como cuidar da tua família</h3>
+                        <p>Nutrição Prática</p>
+                        <p class="meta-dados">5.4 mil visualizações • há 1 semana</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card-yt" onclick="irParaPlayer('unicef.mp4', 'Alimentação Segura')">
+                <div class="thumbnail-container">
+                    <video muted preload="metadata">
+                        <source src="unicef.mp4" type="video/mp4">
+                    </video>
+                    <div class="play-overlay"></div>
+                </div>
+                <div class="info-container">
+                    <div class="avatar-canal">VF</div>
+                    <div class="detalhes-video">
+                        <h3>Alimentação Segura</h3>
+                        <p>Infância Saudável</p>
+                        <p class="meta-dados">24 mil visualizações • há 1 mês</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Roda pe -->
+        <div class="footer">
+            <marquee behavior="scroll" direction="left" >
+
+                <div>cuide do seu bebe</div>
+
+                <div class="slogan">
+                    NAO NUTRIMOS APENAS PARA VIVER.. VIVEMOS PARA GERAR NUTRICAO E CUIDADO, DESENVOLVIDO POR BENILDO DINIS.. PELA ORDEM✨✨
+                </div>
+            </marquee>
+           
+        </div>
+
+    </div>
+    <script src="anuncio.js"></script>
+    <script src="escript.gb.js"></script>
+    
+
+</body>
+
+</html>

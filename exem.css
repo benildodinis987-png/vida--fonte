@@ -1,0 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: white;
+    padding: 20px;
+}
+
+.fundo {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: black;
+    border-radius: 15px;
+}
+
+.Funaco {
+    margin-top: ;
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-moz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vida-Fonte Chat - Combate à Desnutrição Infantil</title>
+    <link rel="stylesheet" href="cooonver - Copy.css">
+    
+   
+</head>
+
+<body>
+
+    <!-- Overlay e Janela de Histórico Lateral -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="history-sidebar" id="historySidebar">
+        <div class="history-header">
+            <h3>Suas Conversas</h3>
+            <button class="header-btn" id="closeHistoryBtn" style="color: #fff;">✕</button>
+        </div>
+        <div class="history-list" id="historyList">
+            <!-- Injetado dinamicamente via JS -->
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <header class="chat-header">
+            <div class="bot-info">
+                <div class="bot-avatar">
+                    <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif" width="30" height="30">
+                </div>
+                <div>
+                    <h2>Assistente Vida-Fonte</h2>
+                    <span class="status">Online</span>
+                </div>
+            </div>
+
+            <!-- Botões Superiores do Lado Direito -->
+            <div class="header-actions">
+                <!-- Botão Novo Chat -->
+                <button type="button" id="newChatBtn" class="header-btn" title="Novo Chat">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                    </svg>
+                </button>
+                <!-- Botão Abrir Histórico -->
+                <button type="button" id="openHistoryBtn" class="header-btn" title="Histórico de Conversas">
+                    <img src="history_icon_155273.png" width="24" height="24">
+                </button>
+            </div>
+        </header>
+
+        <main class="chat-messages" id="chatMessages">
+            <!-- Mensagens gerenciadas pelo JS -->
+        </main>
+
+        <footer class="chat-input-area">
+            <form id="chatForm">
+                <div class="input-wrapper">
+                    <input type="text" id="userInput" placeholder="Digite sua dúvida ou fale no microfone..." autocomplete="off" required>
+                    
+                    <button type="button" id="micBtn" class="mic-btn" title="Gravar voz">
+                        <svg viewBox="0 0 24 24" width="22" height="22">
+                            <path fill="currentColor" d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" />
+                        </svg>
+                    </button>
+
+                    <button type="submit" id="sendBtn">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </footer>
+    </div>
+
+    <script src="cooonver - Copy (2).js"></script>
+</body>
+
+</html>

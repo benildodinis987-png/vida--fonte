@@ -1,0 +1,138 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.nom {
+    display: grid;
+    justify-content: left;
+}
+
+.boto {
+    display: grid;
+    justify-content: left;
+    background: white;
+    border: none;
+    border-bottom: 30px;
+}
+
+
+/*  CONTAINER PRINCIPAL DO QUIZ  */
+
+.container_quiz {
+    background-color: #ffffff;
+    width: 600px;
+    max-width: 95%;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+}
+
+
+/*  TÍTULO  */
+
+.titulo_quiz {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+/* BARRA DE PROGRESSO  */
+
+.barra_progresso {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progresso {
+    height: 10px;
+    width: 0%;
+    background-color: #4CAF50;
+    transition: width 0.3s;
+}
+
+
+/* PERGUNTA  */
+
+.pergunta {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.esq {
+    display: flex;
+    justify-content: end;
+}
+
+
+/*  OPÇÕES  */
+
+.lista_opcoes {
+    list-style: none;
+    padding: 0;
+}
+
+.opcao {
+    margin-bottom: 10px;
+}
+
+.botao_opcao {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: #e0e0e0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.botao_opcao:hover {
+    background-color: #c8e6c9;
+}
+
+
+/*  BOTÃO PRÓXIMA  */
+
+.botao_proxima {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none;
+}
+
+
+/* TELA DE RESULTADO  */
+
+.tela_resultado {
+    text-align: center;
+    display: none;
+}
+
+.botao_reiniciar {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}

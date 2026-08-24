@@ -1,0 +1,154 @@
+body {
+    margin: 0;
+    font-family: Segoe UI, sans-serif;
+    background: #cfd8dc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+
+
+body.alto-contraste {
+    background-color: #000000 !important;
+    color: #000000 !important;
+}
+body.alto-contraste a {
+    color: #fffb3c !important;
+}
+
+body.fonte-dislexia {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+}
+
+.title {
+    width: 1000px;
+    margin-bottom: 20px;
+}
+
+.title small {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.container {
+    width: 1000px;
+    background: #eee;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.top-info span {
+    margin-left: 20px;
+    color: #555;
+    cursor: pointer;
+}
+
+.top-voltar {
+    margin-top: 10px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+    font-weight: bold;
+    margin-bottom: 12px;
+    width: 200px;
+}
+
+.input {
+    width: 90%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: #f7f7f7;
+}
+
+.btn-green {
+    width: 100%;
+    background: #27ae60;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    margin-top: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.chart {
+    height: 250px;
+    background: linear-gradient(to top right, #eafaf1, #e3f2fd);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+}
+
+.history-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.small-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.center {
+    text-align: center;
+}
+
+.icon {
+    font-size: 28px;
+}
+
+.download {
+    margin-top: 20px;
+    background: #3498db;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+
+.footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #555;
+}

@@ -1,0 +1,304 @@
+:root {
+    --primary-color: #2e7d32; /* Verde Saúde */
+    --secondary-color: #1565c0; /* Azul Institucional */
+    --text-color: #333333;
+    --bg-light: #f4f6f8;
+    --card-bg: #ffffff;
+    --accent-color: #e8f5e9;
+    --border-radius: 10px;
+    --border-color: #dddddd;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-color);
+    padding: 30px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* CONTAINER PRINCIPAL (LAYOUT DE DUAS COLUNAS) */
+.definicoes-container {
+    width: 100%;
+    max-width: 1000px;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 550px;
+    overflow: hidden;
+}
+
+/* MENU LATERAL (SIDEBAR) */
+.definicoes-sidebar {
+    background-color: #f8f9fa;
+    border-right: 1px solid var(--border-color);
+    padding: 30px 20px;
+}
+
+.sidebar-title h3 {
+    color: #444;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.menu-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.menu-btn i {
+    font-size: 1.1rem;
+    color: #777;
+}
+
+.menu-btn:hover {
+    background-color: #eee;
+    color: #222;
+}
+
+.menu-btn.active {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+}
+
+.menu-btn.active i {
+    color: var(--primary-color);
+}
+
+/* PAINEL DE CONTEÚDO (DIREITA) */
+.definicoes-content {
+    padding: 40px;
+}
+
+.tab-panel {
+    display: none; /* Esconde por padrão */
+}
+
+.tab-panel.active {
+    display: block; /* Mostra apenas a aba ativa */
+}
+
+.tab-panel h2 {
+    color: var(--secondary-color);
+    font-size: 1.7rem;
+    margin-bottom: 5px;
+}
+
+.tab-desc {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+/* FORMULÁRIOS INTERNOS */
+.def-form {
+    max-width: 500px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-group input[readonly] {
+    background-color: #f1f3f5;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.form-group small {
+    color: #888;
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+}
+
+/* BOTÕES DE SALVAR */
+.save-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.save-btn:hover {
+    background-color: #1b5e20;
+}
+
+.save-btn.btn-danger {
+    background-color: #c62828;
+}
+
+.save-btn.btn-danger:hover {
+    background-color: #b71c1c;
+}
+
+.divider {
+    margin: 30px 0;
+    border: 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.security-info-box {
+    background-color: #e3f2fd;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.security-info-box h4 {
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+/* ==========================================
+   ESTILIZAÇÃO DOS TOGGLES (INTERRUPTORES)
+   ========================================== */
+.toggle-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.toggle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.toggle-text h4 {
+    color: #333;
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+}
+
+.toggle-text p {
+    color: #666;
+    font-size: 0.88rem;
+    max-width: 500px;
+}
+
+/* Estrutura do Switch Toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* RESPONSIVIDADE PARA SMARTPHONES */
+@media (max-width: 768px) {
+    .definicoes-container {
+        grid-template-columns: 1fr;
+    }
+    .definicoes-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px;
+    }
+    .sidebar-menu {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+    .menu-btn {
+        white-space: nowrap;
+    }
+    .definicoes-content {
+        padding: 25px;
+    }
+}

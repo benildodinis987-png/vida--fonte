@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Plataforma Vidafonte</title>
+    <link rel="stylesheet" href="style-feedback.css">
+    <!-- Ícones (FontAwesome) -->
+    <link rel="stylesheet" href="feedback.css">
+</head>
+<body>
+
+    <main class="feedback-container">
+        <!-- Cabeçalho da Página -->
+        <header class="feedback-header">
+            <h1>A sua opinião importa</h1>
+            <p class="subtitle">Ajude-nos a melhorar a plataforma Vidafonte para proteger a saúde infantil comunitária.</p>
+        </header>
+
+        <div class="feedback-grid">
+            <!-- Coluna 1: Informações de Apoio -->
+            <div class="feedback-info">
+                <h2>Como o seu feedback ajuda?</h2>
+                <p>A Vidafonte foi desenvolvida para fortalecer a vigilância nutricional e a educação em Cabo Delgado. Se encontrou um erro, tem uma sugestão de conteúdo educativo ou quer partilhar a sua experiência, use o formulário ao lado.</p>
+                
+                <div class="info-card">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <div>
+                        <h4>Sugestões de Melhoria</h4>
+                        <p>Ideias para novas perguntas no Quiz Educativo ou melhorias no monitoramento.</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <i class="fa-solid fa-bug"></i>
+                    <div>
+                        <h4>Relatar um Problema</h4>
+                        <p>Teve dificuldades ao submeter uma denúncia ou ao registar uma criança? Informe-nos.</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <i class="fa-solid fa-envelope"></i>
+                    <div>
+                        <h4>Contacto Direto</h4>
+                        <p>Para parcerias institucionais ou suporte técnico avançado.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Formulário de Feedback -->
+            <div class="feedback-form-wrapper">
+                <form action="#" method="POST" class="feedback-form">
+                    
+                    <!-- Tipo de Feedback -->
+                    <div class="form-group">
+                        <label for="tipo-feedback">Tipo de Feedback</label>
+                        <select id="tipo-feedback" name="tipo_feedback" required>
+                            <option value="" disabled selected>Selecione uma opção...</option>
+                            <option value="sugestao">Sugestão de Melhoria</option>
+                            <option value="elogio">Elogio</option>
+                            <option value="problema">Relatar um Erro / Bug</option>
+                            <option value="outro">Outro Assunto</option>
+                        </select>
+                    </div>
+
+                    <!-- Nome (Opcional para incentivar anonimato se desejado, mas bom ter) -->
+                    <div class="form-group">
+                        <label for="nome">Seu Nome (Opcional)</label>
+                        <input type="text" id="nome" name="nome" placeholder="Ex: Benildo Dinis">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Seu E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="Ex: benildo@gmail.com" required>
+                    </div>
+
+                    <!-- Experiência Geral (Rating por estrelas ou satisfação) -->
+                    <div class="form-group">
+                        <label>Como avalia a sua experiência na plataforma?</label>
+                        <div class="satisfaction-options">
+                            <label class="satisfaction-item">
+                                <input type="radio" name="satisfacao" value="excelente" required>
+                                <span>😀 Excelente</span>
+                            </label>
+                            <label class="satisfaction-item">
+                                <input type="radio" name="satisfacao" value="bom">
+                                <span>🙂 Bom</span>
+                            </label>
+                            <label class="satisfaction-item">
+                                <input type="radio" name="satisfacao" value="regular">
+                                <span>😐 Regular</span>
+                            </label>
+                            <label class="satisfaction-item">
+                                <input type="radio" name="satisfacao" value="mau">
+                                <span>🙁 Mau</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Mensagem -->
+                    <div class="form-group">
+                        <label for="mensagem">A sua Mensagem</label>
+                        <textarea id="mensagem" name="mensagem" rows="6" placeholder="Escreva detalhadamente a sua sugestão ou o problema que encontrou..." required></textarea>
+                    </div>
+
+                    <!-- Botão de Envio -->
+                    <button type="submit" class="submit-btn">
+                        <i class="fa-solid fa-paper-plane"></i> Enviar Feedback
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definições - Plataforma Vidafonte</title>
+    <link rel="stylesheet" href="style-definicoes.css">
+    <!-- Ícones (FontAwesome) -->
+    <link rel="stylesheet" href="difinicoes.css">
+</head>
+<body>
+
+    <main class="definicoes-container">
+        <!-- Menu Lateral de Navegação das Definições -->
+        <aside class="definicoes-sidebar">
+            <div class="sidebar-title">
+                <h3><i class="fa-solid fa-gear"></i> Definições</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <button class="menu-btn active" onclick="switchTab('conta')">
+                    <i class="fa-solid fa-user"></i> Conta
+                </button>
+                <button class="menu-btn" onclick="switchTab('seguranca')">
+                    <i class="fa-solid fa-shield-halved"></i> Segurança
+                </button>
+                <button class="menu-btn" onclick="switchTab('notificacoes')">
+                    <i class="fa-solid fa-bell"></i> Notificações
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal Dinâmico -->
+        <section class="definicoes-content">
+            
+            <!-- ABA 1: CONTA -->
+            <div id="tab-conta" class="tab-panel active">
+                <h2>Dados da Conta</h2>
+                <p class="tab-desc">Atualize as suas informações pessoais de registo na plataforma.</p>
+                
+                <form class="def-form">
+                    <div class="form-group">
+                        <label for="nome-completo">Nome Completo</label>
+                        <input type="text" id="nome-completo" value="Benildo Diocleciano Dinis" placeholder="Seu nome">
+                    </div>
+                    <div class="form-group">
+                        <label for="email-contacto">Endereço de E-mail</label>
+                        <input type="email" id="email-contacto" value="benildodinis97@gmail.com" placeholder="Seu e-mail">
+                    </div>
+                    <div class="form-group">
+                        <label for="localizacao">Província / Região</label>
+                        <input type="text" id="localizacao" value="Cabo Delgado - Pemba" readonly>
+                        <small>A localização padrão é definida com base no escopo comunitário do projeto.</small>
+                    </div>
+                    <button type="submit" class="save-btn">Guardar Alterações</button>
+                </form>
+            </div>
+
+            <!-- ABA 2: SEGURANÇA -->
+            <div id="tab-seguranca" class="tab-panel">
+                <h2>Segurança da Conta</h2>
+                <p class="tab-desc">Proteja o seu acesso para garantir a integridade dos dados de monitoramento infantil[cite: 1].</p>
+                
+                <form class="def-form">
+                    <div class="form-group">
+                        <label for="senha-atual">Palavra-passe Atual</label>
+                        <input type="password" id="senha-atual" placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label for="nova-senha">Nova Palavra-passe</label>
+                        <input type="password" id="nova-senha" placeholder="Mínimo 8 caracteres">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirma-senha">Confirmar Nova Palavra-passe</label>
+                        <input type="password" id="confirma-senha" placeholder="Repita a nova palavra-passe">
+                    </div>
+                    <button type="submit" class="save-btn btn-danger">Atualizar Palavra-passe</button>
+                </form>
+
+                <hr class="divider">
+
+                <div class="security-info-box">
+                    <h4><i class="fa-solid fa-circle-check"></i> Sessões Ativas</h4>
+                    <p>Você está atualmente conectado via navegador web a partir de Pemba, Moçambique.</p>
+                </div>
+            </div>
+
+            <!-- ABA 3: NOTIFICAÇÕES -->
+            <div id="tab-notificacoes" class="tab-panel">
+                <h2>Preferências de Alerta</h2>
+                <p class="tab-desc">Escolha como e quando deseja receber alertas importantes do ecossistema Vidafonte[cite: 1].</p>
+                
+                <div class="toggle-container">
+                    <div class="toggle-item">
+                        <div class="toggle-text">
+                            <h4>Alertas de Denúncias</h4>
+                            <p>Receber avisos quando houver atualizações sobre as denúncias de risco que submeteu[cite: 1].</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-item">
+                        <div class="toggle-text">
+                            <h4>Lembretes do Quiz Educativo</h4>
+                            <p>Notificar-me para responder ao limite diário de perguntas sobre nutrição infantil[cite: 1].</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-item">
+                        <div class="toggle-text">
+                            <h4>Relatórios de Impacto</h4>
+                            <p>Receber resumos mensais sobre a evolução do monitoramento comunitário em Cabo Delgado[cite: 1].</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Script de Alternância de Abas -->
+    <script>
+        function switchTab(tabName) {
+            // Remove a classe 'active' de todos os painéis de conteúdo
+            const panels = document.querySelectorAll('.tab-panel');
+            panels.forEach(panel => panel.classList.remove('active'));
+
+            // Remove a classe 'active' de todos os botões do menu lateral
+            const buttons = document.querySelectorAll('.menu-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Ativa o painel e o botão correspondente
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>

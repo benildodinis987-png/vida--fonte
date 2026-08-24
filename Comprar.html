@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Senha de Consulta</title>
+    <link rel="stylesheet" href="comp.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <div class="logo">
+                <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif" width="100" height="100" alt="Logo">
+                <div>
+                    <strong>VIDAFONTE</strong><br>
+                    <small>A vida e a fonte de tudo que alimenta</small>
+                </div>
+            </div>
+
+            <div class="top-info">
+                <a href="puto.html"> <span> <img src="perfil.jpeg" height="40" width="40" > </span>
+                </a>
+            </div>
+
+
+        </header>
+
+        <div class="top-voltar">
+            <a href="paginal.html"> <button class="btn8">  <img src="93634.png" height="30" width="30"></button>
+            </a>
+        </div>
+        <h1>Comprar ou registrar Senha de Consulta</h1>
+
+        <!-- 1. Unidade Sanitária -->
+
+
+        <section>
+
+
+            <select id="hospital" class="input">
+        <option value="">Escolha a Unidade sanitaria</option>
+        <option value="Centro de saude de Ingonane">Centro de saude de Ingonane</option>
+        <option value="centro de saude de Cariaco">centro de saude de Cariaco</option>
+        <option value="Centro de Saúde de Natite"> Centro de Saúde de Natite</option>
+        <option value="Centro de Saúde de Mahate"> Centro de Saúde de Mahate</option>
+       <option value="Centro de Saúde de Maringanha "> Centro de Saúde de Maringanha </option>
+        <option value="Centro de Saúde de Muxara"> Centro de Saúde de Muxara</option>
+        <option value="Chuiba Centro de Saúde Urbano C">Chuiba Centro de Saúde Urbano C </option>
+                <option value="Hospital Provincial de Cabo Delgado"> Hospital Provincial de Cabo Delgado</option>
+
+                   
+
+        
+      
+      </select>
+
+        </section>
+
+        <!-- 2. Detalhes -->
+        <section>
+            <h2>Detalhes da Consulta</h2>
+
+            <div class="details">
+                <div>
+                    <label>Data</label>
+                    <input type="date" id="dataConsulta" class="input">
+                </div>
+
+
+                <div>
+                    <label>Hora</label>
+                    <select class="input">
+          <option>07:00 - 15:00</option>
+          <option>16:00 - 07:00</option>
+        </select>
+                </div>
+
+                <div>
+                    <label>Especialidade</label>
+                    <select id="especialidade" class="input">
+          <option>Pediatria</option>
+          <option>Nutrição</option>
+        </select>
+                </div>
+            </div>
+
+            <div class="price">
+                Preço da Consulta: <strong id="preco">0</strong> MT
+            </div>
+        </section>
+
+        <!-- 3. Pagamento -->
+        <section>
+            <h2> Efetuar Pagamento</h2>
+
+            <div class="Pagamento">
+                <button onclick="selecionarPagamento('M-Pesa')" class="mpesa">M-Pesa</button>
+                <button onclick="selecionarPagamento('e-Mola')" class="emola">eMola</button>
+                <button onclick="selecionarPagamento('mKesh')" class="mkesh">mKesh</button>
+            </div>
+
+            <button class="confirm" onclick="confirmarPagamento()">Confirmar e Pagar</button>
+            <p id="cartaoSenha"></p>
+
+        </section>
+
+    </div>
+
+    <script src="senh.js"></script>
+
+</body>
+
+</html>

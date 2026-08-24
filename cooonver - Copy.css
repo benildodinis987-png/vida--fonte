@@ -1,0 +1,717 @@
+/* =========================================
+   VIDA-FONTE CHAT - DESIGN MODERNO
+   ========================================= */
+
+/* ---------- RESET ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #0b8f78;
+    --primary-dark: #06715f;
+    --primary-light: #e6f7f2;
+    --background: #f4f7f6;
+    --white: #ffffff;
+    --text: #263238;
+    --text-light: #718096;
+    --border: #e5e9e8;
+    --bot-message: #ffffff;
+    --user-message: #dff7ed;
+    --shadow: 0 10px 35px rgba(30, 60, 50, 0.10);
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(11, 143, 120, 0.10), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(76, 175, 80, 0.08), transparent 35%),
+        var(--background);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+
+/* =========================================
+   CONTAINER PRINCIPAL
+   ========================================= */
+
+.chat-container {
+    width: 100%;
+    max-width: 850px;
+    height: min(88vh, 760px);
+    min-height: 550px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--white);
+    border-radius: 24px;
+    overflow: hidden;
+
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================
+   CABEÇALHO
+   ========================================= */
+
+.chat-header {
+    background: linear-gradient(135deg, #0b8f78, #087d6a);
+    color: white;
+
+    padding: 18px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    flex-shrink: 0;
+}
+
+.bot-info {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.bot-avatar {
+    width: 50px;
+    height: 50px;
+
+    background: white;
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.bot-avatar img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+}
+
+.bot-info h2 {
+    font-size: 18px;
+    font-weight: 650;
+    margin-bottom: 4px;
+}
+
+.status {
+    font-size: 13px;
+    opacity: 0.9;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #7fffd4;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(127, 255, 212, 0.18);
+}
+
+
+/* =========================================
+   BOTÕES DO CABEÇALHO
+   ========================================= */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-btn {
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.header-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-2px);
+}
+
+.header-btn img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+
+/* =========================================
+   ÁREA DAS MENSAGENS
+   ========================================= */
+
+.chat-messages {
+    flex: 1;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 28px 26px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    background: #f8faf9;
+
+    scroll-behavior: smooth;
+}
+
+
+/* Scroll moderno */
+
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #cbd5d2;
+    border-radius: 20px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #9eaca7;
+}
+
+
+/* =========================================
+   MENSAGENS
+   ========================================= */
+
+.message {
+    display: flex;
+    flex-direction: column;
+    max-width: 78%;
+    animation: aparecerMensagem 0.25s ease-out;
+}
+
+@keyframes aparecerMensagem {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ---------- MENSAGEM DO UTILIZADOR ---------- */
+
+.message.user {
+    align-self: flex-end;
+}
+
+.message.user .message-content {
+    background: linear-gradient(135deg, #0b8f78, #07816c);
+    color: white;
+
+    border-radius: 20px 20px 5px 20px;
+
+    box-shadow: 0 5px 15px rgba(11, 143, 120, 0.15);
+}
+
+
+/* ---------- MENSAGEM DO ASSISTENTE ---------- */
+
+.message.bot {
+    align-self: flex-start;
+}
+
+.message.bot .message-content {
+    background: var(--bot-message);
+    color: var(--text);
+
+    border: 1px solid #edf0ef;
+
+    border-radius: 20px 20px 20px 5px;
+
+    box-shadow: 0 4px 15px rgba(30, 60, 50, 0.06);
+}
+
+
+/* ---------- CONTEÚDO DAS MENSAGENS ---------- */
+
+.message-content {
+    padding: 14px 17px;
+
+    font-size: 15px;
+    line-height: 1.65;
+
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.message-content p {
+    margin: 0 0 12px;
+}
+
+.message-content p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================================
+   FORMATAÇÃO DAS RESPOSTAS DA IA
+   ========================================= */
+
+.message-content h2,
+.message-content h3,
+.message-content h4 {
+    color: #087764;
+    line-height: 1.35;
+    margin: 14px 0 8px;
+}
+
+.message-content h2 {
+    font-size: 19px;
+}
+
+.message-content h3 {
+    font-size: 17px;
+}
+
+.message-content h4 {
+    font-size: 16px;
+}
+
+.message-content strong {
+    color: #087764;
+    font-weight: 700;
+}
+
+.message-content ul,
+.message-content ol {
+    margin: 10px 0 12px;
+    padding-left: 22px;
+}
+
+.message-content li {
+    margin: 7px 0;
+}
+
+.message-content hr {
+    border: none;
+    border-top: 1px solid #e5e9e8;
+    margin: 15px 0;
+}
+
+
+/* Quando o utilizador usar negrito, mantém branco */
+
+.message.user .message-content strong {
+    color: white;
+}
+
+
+/* =========================================
+   BOTÕES DAS MENSAGENS
+   ========================================= */
+
+.message-actions {
+    display: flex;
+    gap: 5px;
+    padding: 5px 4px 0;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+    color: #8a9995;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.action-btn:hover {
+    background: #e9f2ef;
+    color: var(--primary);
+}
+
+.action-btn.falando {
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+
+/* =========================================
+   ÁREA DE ESCRITA
+   ========================================= */
+
+.chat-input-area {
+    background: white;
+    padding: 16px 20px 20px;
+
+    border-top: 1px solid #edf0ef;
+
+    flex-shrink: 0;
+}
+
+#chatForm {
+    width: 100%;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-height: 58px;
+
+    padding: 5px 6px 5px 18px;
+
+    background: #f5f8f7;
+    border: 1px solid #e2e8e5;
+    border-radius: 18px;
+
+    transition: 0.25s ease;
+}
+
+.input-wrapper:focus-within {
+    background: white;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(11, 143, 120, 0.10);
+}
+
+#userInput {
+    flex: 1;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--text);
+
+    padding: 10px 5px;
+}
+
+#userInput::placeholder {
+    color: #9aa6a2;
+}
+
+
+/* =========================================
+   BOTÃO MICROFONE
+   ========================================= */
+
+.mic-btn {
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    background: transparent;
+
+    color: #71807b;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.mic-btn:hover {
+    background: #e6f1ee;
+    color: var(--primary);
+}
+
+.mic-btn.gravando {
+    color: #e53935;
+    background: #ffebee;
+    animation: pulsar 1s infinite;
+}
+
+@keyframes pulsar {
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+
+/* =========================================
+   BOTÃO ENVIAR
+   ========================================= */
+
+#sendBtn {
+    width: 46px;
+    height: 46px;
+
+    border: none;
+    border-radius: 14px;
+
+    background: linear-gradient(135deg, #0b9b83, #087b69);
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 14px rgba(11, 143, 120, 0.22);
+
+    transition: 0.25s ease;
+}
+
+#sendBtn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 20px rgba(11, 143, 120, 0.28);
+}
+
+#sendBtn:active {
+    transform: scale(0.96);
+}
+
+
+/* =========================================
+   SIDEBAR DO HISTÓRICO
+   ========================================= */
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(20, 35, 30, 0.35);
+    backdrop-filter: blur(3px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: 0.3s;
+
+    z-index: 100;
+}
+
+.sidebar-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+.history-sidebar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 320px;
+    max-width: 85vw;
+    height: 100vh;
+
+    background: white;
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    z-index: 101;
+
+    display: flex;
+    flex-direction: column;
+
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.12);
+}
+
+.history-sidebar.open {
+    transform: translateX(0);
+}
+
+.history-header {
+    padding: 22px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: white;
+
+    background: linear-gradient(135deg, #0b8f78, #087d6a);
+}
+
+.history-header h3 {
+    font-size: 18px;
+}
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+}
+
+.history-item {
+    padding: 14px 15px;
+    margin-bottom: 7px;
+
+    border-radius: 12px;
+
+    color: #42524d;
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-item:hover {
+    background: #eef7f4;
+}
+
+.history-item.active {
+    background: #e1f4ee;
+    color: #087764;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE PARA TELEMÓVEIS
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .chat-container {
+        max-width: none;
+        width: 100%;
+        height: 100vh;
+        min-height: 100vh;
+
+        border-radius: 0;
+        border: none;
+    }
+
+    .chat-header {
+        padding: 15px 16px;
+    }
+
+    .bot-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 14px;
+    }
+
+    .bot-info h2 {
+        font-size: 16px;
+    }
+
+    .header-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .chat-messages {
+        padding: 20px 14px;
+        gap: 12px;
+    }
+
+    .message {
+        max-width: 88%;
+    }
+
+    .message-content {
+        font-size: 14.5px;
+        padding: 13px 15px;
+    }
+
+    .chat-input-area {
+        padding: 12px;
+    }
+
+    .input-wrapper {
+        min-height: 54px;
+        border-radius: 16px;
+    }
+
+    #sendBtn {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+
+/* =========================================
+   ECRÃS PEQUENOS
+   ========================================= */
+
+@media (max-width: 380px) {
+
+    .bot-info h2 {
+        font-size: 14px;
+    }
+
+    .status {
+        font-size: 11px;
+    }
+
+    .header-actions {
+        gap: 4px;
+    }
+
+    .message {
+        max-width: 92%;
+    }
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denúncia</title>
+    <link rel="stylesheet" href="denun.css">
+</head>
+
+<body>
+
+
+    <div class="container">
+
+        <header>
+
+            <!--Cabeçalho-->
+
+            <div>
+                <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif" width="40" height="40">
+
+            </div>
+
+            <div class="centro">
+                <strong>VIDAFONTE</strong><br>
+                <small>A vida e a fonte de tudo que alimenta</small>
+            </div>
+
+            <div>
+                <a href="puto.html"> <span> <img src="perfil.jpeg" height="30" width="30" > </span>
+
+            </div>
+
+        </header>
+        <div class="back">
+
+            <a href="paginal.html"> <img src="93634.png" width="30" height="30"></a>
+        </div>
+
+        <h2>Denúncia às atividades</h2>
+
+        <p>
+            Esta página permite denunciar casos de desnutrição infantil, negligência alimentar ou mau atendimento em unidades de saúde.
+        </p>
+
+        <!-- BOTÕES -->
+        <div class="selector">
+
+            <button id="btnDesnutricao" class="active" type="button">
+                Desnutrição Infantil
+            </button>
+
+            <button id="btnHospital" type="button">
+                Mau Atendimento
+            </button>
+
+        </div>
+
+        <!-- FORMULÁRIO DESNUTRIÇÃO -->
+        <form id="formDesnutricao" action="salvar_denuncia.php" method="POST" style="display:block;">
+
+            <div class="section">
+
+                <label for="nomeCrianca">
+                    Nome da Criança
+                </label>
+
+                <input type="text" id="nomeCrianca" name="nomeCrianca" required>
+
+                <label for="idadeCrianca">
+                    Idade
+                </label>
+
+                <input type="number" id="idadeCrianca" name="idadeCrianca" min="0" max="18" required>
+
+                <label for="localidade">
+                    Localidade / Bairro
+                </label>
+
+                <input type="text" id="localidade" name="localidade" required>
+
+                <label for="descricao">
+                    Descrição da Situação
+                </label>
+
+                <textarea id="descricao" name="descricao" rows="4" placeholder="Explique sinais de desnutrição..." required></textarea>
+
+                <button type="submit">
+                    Enviar Denúncia
+                </button>
+
+                <div id="msgDesnutricao" class="success"></div>
+
+            </div>
+
+        </form>
+
+        <!-- FORMULÁRIO HOSPITAL -->
+        <form id="formHospital" action="salvar_hospital.php" method="POST" style="display:none;">
+
+            <div class="section">
+
+                <label for="hospital">
+                    Nome do Hospital/Posto de Saúde
+                </label>
+
+                <input type="text" id="hospital" name="hospital">
+
+                <label for="problemaHospital">
+                    Descrição do Problema
+                </label>
+
+                <textarea id="problemaHospital" name="problemaHospital" rows="4" placeholder="Explique o problema..."></textarea>
+
+                <label for="nomeDenunciante">
+                    Seu Nome (opcional)
+                </label>
+
+                <input type="text" id="nomeDenunciante" name="nomeDenunciante">
+
+                <label for="contato">
+                    Contato (opcional)
+                </label>
+
+                <input type="text" id="contato" name="contato">
+
+                <button type="submit">
+                    Enviar Denúncia
+                </button>
+
+                <div id="msgHospital" class="success"></div>
+
+            </div>
+
+        </form>
+
+        <!-- BOTÃO PDF -->
+        <div class="relat">
+
+            <button type="button">
+                Baixar minha denúncia
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="denn.js"></script>
+
+</body>
+
+</html>

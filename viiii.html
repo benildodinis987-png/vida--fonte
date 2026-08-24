@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDAFONTE - Modo Cinema Claro</title>
+
+    <style>
+        :root {
+            /* Alteração para tons claros e fundo puramente branco */
+            --bg-principal: #ffffff;
+            --bg-card: #f8fafc;
+            --accent: #2563eb;
+            --texto: #0f172a;
+            --sub-texto: #64748b;
+            --borda-suave: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-principal);
+            color: var(--texto);
+            overflow-x: hidden;
+        }
+
+        .container {
+    width: 900px;
+    margin: 4px auto;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+
+        /* cABECA */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 50px;
+}
+
+.points {
+    font-weight: bold;
+}
+
+.menu {
+    display: flex;
+    gap: 20px;
+    color: #777;
+}
+
+.btn5 {
+    border: none;
+    border-radius: 3px;
+    background: rgb(60, 60, 231);
+    cursor: pointer;
+
+}
+
+.menu-container{
+  position: relative;
+  display: inline-block;
+  
+    cursor: pointer;
+    border: 1px;
+}
+
+.menu-icon{
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  
+}
+
+.menu-btn{
+    cursor: pointer;
+    padding: 14px;
+    border-radius: 10px;
+    width: 100px;
+    border: none;
+}
+
+.dropdown{
+  display: none;
+  position: absolute;
+  top: 100%;          /* aparece por baixo */
+  right: 0;
+  width: 220px;
+  background: rgb(227, 227, 235);
+  border-radius: 10px;
+ 
+  box-shadow: 0 0 12px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+
+.dropdown a{
+  display: block;
+  padding: 12px;
+  text-decoration: none;
+  color: #222;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown a:hover{
+  background: #f5f5f5;
+}
+
+.logout{
+  color: red;
+}
+
+        /* Topbar Fluida com fundo claro e leve transparência */
+        .navbar-cinema {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 16px 40px;
+            border-bottom: 1px solid var(--borda-suave);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .btn-voltar {
+            color: var(--texto);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+
+        .btn-voltar:hover {
+            color: var(--accent);
+        }
+
+        /* Content Container */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 24px 60px 24px;
+        }
+
+        /* Seção do Player Imersivo */
+        .secao-player {
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .player-moldura {
+            width: 100%;
+            background: #000;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px -15px rgba(15, 23, 42, 0.15);
+            aspect-ratio: 16 / 9;
+            border: 1px solid var(--borda-suave);
+        }
+
+        #videoPrincipal {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Detalhes do Vídeo Ativo */
+        .info-video-principal {
+            margin-top: 28px;
+        }
+
+        .tag-canal {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.08);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        h1#tituloVideo {
+            font-size: 28px;
+            margin: 0 0 16px 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .meta-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--borda-suave);
+        }
+
+        .descricao-texto {
+            color: var(--sub-texto);
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+
+        .acoes-lista {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-acao {
+            background: var(--bg-card);
+            border: 1px solid var(--borda-suave);
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--texto);
+            transition: all 0.2s;
+        }
+
+        .btn-acao:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        /* Seção Inferior: Vitrine de Conteúdos */
+        .secao-vitrine {
+            margin-top: 60px;
+        }
+
+        .vitrine-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .vitrine-titulo {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        /* Grade Modular */
+        .grade-conteudo {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        /* Cards em Fundo Claro */
+        .card-streaming {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--borda-suave);
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s;
+        }
+
+        .card-streaming:hover {
+            transform: translateY(-6px);
+            border-color: rgba(37, 99, 235, 0.3);
+            box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .preview-video-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .detalhes-card {
+            padding: 20px;
+        }
+
+        .detalhes-card h4 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--texto);
+        }
+
+        .detalhes-card .categoria-card {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .detalhes-card p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--sub-texto);
+        }
+    </style>
+</head>
+
+<body>
+ 
+    <DIV class="container">
+    <!--CABECA-->
+    
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">
+                <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif">
+                <div>
+                    <strong>VIDAFONTE</strong><br>
+                    <small>A vida e a fonte de tudo que alimenta</small>
+                </div>
+            </div>
+
+          
+
+           <div class="menu-container">
+    <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
+
+    <div class="dropdown" id="menu">
+        <a href="cooonver.html"> Assistente IA</a>
+        <a href="puto.html"> perfil</a>
+        <a href="difinicoes.html"> Definições</a>
+        <a href="acessibilidade.html"> Acessibilidade</a>
+        <a href="feedback.html"> Feedback</a>
+        <a href="Denuncia.html"> Denúncia</a>
+        <a href="sobree.html">ℹ Sobre</a>
+        <a href="Login 2.js.html"> Sair da Conta</a>
+    </div>
+            </div>
+        </div>
+
+    <!-- Topbar com fundo claro -->
+
+
+    <div class="content-wrapper">
+        
+        <!-- Zona do Player -->
+        <section class="secao-player">
+            <div class="player-moldura">
+                <video id="videoPrincipal" controls autoplay></video>
+            </div>
+
+            <div class="info-video-principal">
+                <span class="tag-canal">Vidafonte Original</span>
+                <h1 id="tituloVideo">Carregando conteúdo...</h1>
+
+                <div class="meta-container">
+                    <div class="acoes-lista">
+                        <button class="btn-acao">✨ Recomendar</button>
+                        <button class="btn-acao">🔗 Copiar Ligação</button>
+                    </div>
+                </div>
+                
+                <p class="descricao-texto">
+                    Espaço dedicado ao bem-estar e desenvolvimento coletivo. Vídeo integrado na plataforma de formação comunitária VIDAFONTE.
+                </p>
+            </div>
+        </section>
+
+        <!-- Vitrine Inferior de Sugestões -->
+        <section class="secao-vitrine">
+            <div class="vitrine-topo">
+                <h3 class="vitrine-titulo">Continuar a Assistir</h3>
+            </div>
+            
+            <div id="listaVideosLaterais" class="grade-conteudo"></div>
+        </section>
+
+    </div>
+    </DIv>
+    
+
+    <script>
+        // Captura os parâmetros enviados pela URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoAlvo = urlParams.get("video");
+        const tituloAlvo = urlParams.get("titulo");
+
+        const playerPrincipal = document.getElementById("videoPrincipal");
+        const areaTitulo = document.getElementById("tituloVideo");
+
+        // Aplica o vídeo e título capturados
+        if (videoAlvo) {
+            playerPrincipal.src = videoAlvo;
+        }
+        if (tituloAlvo) {
+            areaTitulo.innerText = decodeURIComponent(tituloAlvo);
+            document.title = decodeURIComponent(tituloAlvo) + " - VIDAFONTE";
+        }
+
+        // Catálogo de Mídias
+        const catalogo = [
+            { titulo: "Casos de Nutrição Infantil", video: "hospital.mp4" },
+            { titulo: "Como cuidar da tua família", video: "nut.mp4" },
+            { titulo: "Alimentação Segura", video: "unicef.mp4" }
+        ];
+
+        const containerVitrine = document.getElementById("listaVideosLaterais");
+
+        // Renderiza os cards modulares inferiores
+        catalogo.forEach(item => {
+            if (item.video !== videoAlvo) {
+                containerVitrine.innerHTML += `
+                    <div class="card-streaming" onclick="reproduzirOutro('${item.video}', '${item.titulo}')">
+                        <div class="preview-video-container">
+                            <video muted preload="metadata">
+                                <source src="${item.video}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="detalhes-card">
+                            <div class="categoria-card">Sugestão</div>
+                            <h4>${item.titulo}</h4>
+                            <p>Plataforma VIDAFONTE</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
+        // Troca de vídeo dinâmica
+        function reproduzirOutro(novoVideo, fontTitulo) {
+            window.location.href = window.location.pathname + "?video=" + encodeURIComponent(novoVideo) + "&titulo=" + encodeURIComponent(fontTitulo);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+body{
+font-family: Arial, sans-serif;
+background:#cadbec;
+margin:0;
+}
+
+.container{
+width:95%;
+margin:auto;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px;
+background: white;
+}
+
+.left-col{
+    display: grid;
+    grid: 400px;
+}
+
+.eu{
+    left: 50px;
+}
+
+.left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.logo{
+ 
+width:40px;
+
+}
+
+.avatar{
+width:60px;
+border-radius:50%;
+border:3px solid #2ecc71;
+}
+
+.grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+}
+
+.card{
+background:#24364d;
+color:white;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+.white{
+background:white;
+color:black;
+}
+
+.btn{
+margin-top:10px;
+padding:10px 20px;
+border:none;
+border-radius:6px;
+background:#1e3a5f;
+color:white;
+cursor:pointer;
+}
+
+.reco{
+margin:10px 0;
+display:flex;
+gap:10px;
+}
+
+.edu{
+display:flex;
+gap:15px;
+margin-top:15px;
+}
+
+.edu img{
+width:100px;
+height:80px;
+border-radius:10px;
+object-fit:cover;
+}
+
+.badge{
+background:#2ecc71;
+color:white;
+padding:10px;
+border-radius:50px;
+width:120px;
+text-align:center;
+margin-bottom:10px;
+}
+
+
+.medals{
+font-size:30px;
+}
+
+.progress{
+background:#ddd;
+height:10px;
+border-radius:10px;
+}
+
+.bar{
+width:40%;
+height:100%;
+background:red;
+border-radius:10px;
+}
+
+.help{
+margin-top:20px;
+width:100%;
+padding:15px;
+border:none;
+border-radius:8px;
+background:#e74c3c;
+color:white;
+font-size:16px;
+cursor:pointer;
+margin-top: 450px;
+}
+
+footer{
+    display: grid;
+    justify-content: center;
+    background: white;
+    padding: 20px;
+}
+
+

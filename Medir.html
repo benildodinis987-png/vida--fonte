@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Medir Criança</title>
+    <link rel="stylesheet" href="medi.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif" width="100" height="100" alt="Logo">
+                <div>
+                    <strong>VIDAFONTE</strong><br>
+                    <small>Crescer saudavel e um direito de toda crianca</small>
+                </div>
+            </div>
+
+            <div class="top-info">
+                <a href="puto.html"> <span> <img src="perfil.jpeg" height="40" width="40" > </span>
+                </a>
+            </div>
+
+
+        </header>
+
+        <div class="top-voltar">
+            <a href="paginal.html"> <img src="93634.png" height="30" width="30">
+            </a>
+        </div>
+
+        <div class="grid">
+
+            <!-- COLUNA ESQUERDA -->
+            <div>
+
+                <div class="section-title">Registo de Medições</div>
+
+                <div class="card">
+
+
+                    <input id="data" class="input" type="date" placeholder="Data">
+                    <input id="peso" class="input" type="number" placeholder="Peso (kg)">
+                    <input id="altura" class="input" type="number" placeholder="Altura (cm)">
+                    <input id="braco" class="input" type="number" placeholder="Perímetro do braço (cm)">
+                    <input id="cranio" class="input" type="number" placeholder="Perímetro do cranio (cm)">
+
+                    <button class="btn-green" onclick="registrarMedicao()">
+                        Registar Medição
+                    </button>
+                </div>
+
+                <div class="card" style="margin-top:15px;">
+                    <b>Histórico Completo</b>
+                    <ul id="historico"></ul>
+                </div>
+
+            </div>
+
+            <!-- COLUNA DIREITA -->
+            <div>
+
+                <div class="card">
+                    <b>Evolução: Peso e Idade da Criança</b>
+                    <canvas id="grafico"></canvas>
+                </div>
+
+                <div class="small-grid">
+
+                    <div class="card center">
+                        <div class="icon">✔</div>
+                        <b>Status de Saúde</b>
+                        <p id="status">
+                            Boa! O Benildo está na faixa de peso ideal.
+                        </p>
+                    </div>
+
+                    <div class="card center">
+                        <div class="icon">💡</div>
+                        <b>Dicas Importantes</b>
+                        <p id="dicas">
+                            Cresce bem quando consome dieta rica em vegetais.
+                        </p>
+                    </div>
+
+                </div>
+
+                <button class="download" onclick="baixarPDF()">
+                    Descarregar Relatório PDF
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Script JS -->
+    <script src="testann.js"></script>
+
+</body>
+
+</html>

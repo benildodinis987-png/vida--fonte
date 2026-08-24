@@ -1,0 +1,212 @@
+        body {
+            margin: 0;
+            font-family: Segoe UI, sans-serif;
+            background: #cfd8dc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            margin: auto;
+            width: 1000px;
+            background: #eee;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* BOTÃO DE NOTIFICAÇÕES */
+.switch {
+    width: 50px;
+    height: 26px;
+    background-color: #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    transition: 0.3s;
+}
+
+/* Bolinha dentro do botão */
+.switch::after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: 0.3s;
+}
+
+/* Quando estiver ligado */
+.switch.active {
+    background-color: #4CAF50;
+}
+
+/* Mover a bolinha */
+.switch.active::after {
+    left: 27px;
+}
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo img {
+            width: 50px;
+        }
+        
+        .top-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            margin-top: 20px;
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #ddd;
+            font-size: 14px;
+        }
+        
+        .tab.active {
+            background: #26a69a;
+            color: white;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #ccc;
+            margin: auto;
+        }
+        
+        .info {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+        
+        .btn {
+            background: #26a69a;
+            border: none;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        
+        .switch {
+            width: 40px;
+            height: 20px;
+            background: #ddd;
+            border-radius: 20px;
+            position: relative;
+        }
+        
+        .switch::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+        }
+        
+        .vaccine {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .status {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .ok {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .alert {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .badge {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .delete {
+            margin-top: 15px;
+            background: #e53935;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+        }

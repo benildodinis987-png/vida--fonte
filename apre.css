@@ -1,0 +1,239 @@
+body {
+    margin: 0;
+    font-family: Segoe UI, sans-serif;
+    background: #cfd8dc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+/* Fundo de todas as paginas */
+
+.container {
+    width: 1000px;
+    background: #eee;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+
+/* cabeca */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.back {
+    margin-top: 40px;
+}
+
+
+/* Nome da plataforma */
+
+.title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+
+/* palavras tocadas do nome */
+
+.subtitle {
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 18px;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.lesson {
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    color: white;
+    font-weight: 500;
+}
+
+.green {
+    background: #4caf50;
+    cursor: pointer;
+}
+
+.blue {
+    background: #6aa3d9;
+    cursor: pointer;
+}
+
+.gray {
+    background: #bbb;
+    cursor: pointer;
+}
+
+.progress {
+    background: #ddd;
+    height: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    background: #4caf50;
+    height: 10px;
+    border-radius: 10px;
+    width: 60%;
+}
+
+.quiz-card {
+    background: #f4c542;
+    text-align: center;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+.quiz-btn {
+    margin-top: 15px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #3498db;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.video {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.thumb {
+    width: 80px;
+    height: 60px;
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.areaa {
+    margin-top: 15px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #3498db;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.mmm {
+    display: grid;
+    justify-content: center;
+
+}
+.baixo {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.pdf {
+    background: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.area-modulo {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    background-color: #fff3e6;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    z-index: 1000;
+    text-align: left;
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translate(-50%, -70%);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+.close-btn {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+    color: #333;
+}
+
+.btn-voltar {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #f5a623;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-voltar:hover {
+    background-color: #e5941e;
+}
+
+.lista-titulos li {
+    margin: 8px 0;
+    cursor: pointer;
+    font-weight: bold;
+    color: #444;
+}
+
+.lista-titulos li:hover {
+    color: #f5a623;
+}
+
+.explicacao-conteudo {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #ffe6cc;
+    border-radius: 8px;
+}

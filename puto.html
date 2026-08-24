@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de Criança</title>
+    <link rel="stylesheet" href="putao.css">
+</head>
+
+<body>
+
+    <div class="container" id="container">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">
+                <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif">
+                <div>
+                    <strong>VIDAFONTE</strong><br>
+                    <small>A vida e a fonte de tudo que alimenta</small>
+                </div>
+            </div>
+
+            <div class="points">250 Pontos</div>
+
+            <div class="menu">
+                <div> 
+                    <a href="cooonver.html"><button class="btn5">Chat</button></a>
+                </div>
+            </div>
+        </div>
+        <div class="tabs" id="tabs">
+
+            <a href="Comprar.html"> <img src="93634.png " width="30" height="30"> </a>
+
+            <a href="paginal.html"> <img src="casa.webp" width="30" height="30"></a>
+
+
+        </div>
+
+        <div class="grid" id="grid">
+
+            <!-- LEFT -->
+            <div id="leftSection">
+
+                <div class="section-title" id="infoTitle">Informações do Bebé</div>
+                <div class="card" id="infoCard">
+
+                    <div class="avatar" id="avatar"></div>
+
+                    <input type="file" id="inputFoto" accept="image/*" style="display:none;">
+
+                    <div class="info" id="info">
+
+                        <div class="info-row">
+                            <span>Nome Completo:</span>
+                            <span id="nomeCompleto"> </span>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Sobrenome:</span>
+                            <span id="sobrenome"> </span>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Data de Nascimento:</span>
+                            <span id="dataNascimento">**/**/****</span>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Telefone:</span>
+                            <span id="telefone">+258 *********</span>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Peso:</span>
+                            <span id="peso">kg</span>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Altura:</span>
+                            <span id="altura">cm</span>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Email:</span>
+                            <span id="email">nome@email.com</span>
+                        </div>
+
+                    </div>
+
+                    <button class="btn" id="btnEditar">Editar Perfil</button>
+
+                </div>
+
+                <div id="smsContainer" style="margin-top:15px; display:flex; align-items:center; gap:10px;">
+                    <div class="switch" id="smsSwitch"></div>
+                    <span id="smsLabel">Receber Notificações SMS</span>
+                </div>
+
+               <button class="delete" id="btnLogout">Sair da Conta</button>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div id="rightSection">
+
+                <div class="section-title" id="vacinaTitle">Caderneta Vacinação</div>
+                <div class="card" id="vacinaCard">
+
+                    <div class="vaccine" id="vacina1">
+                        <div>Vacina 1, contra colera</div>
+                        <div class="status"><span class="ok" id="status1">✔</span></div>
+                    </div>
+
+                    <div class="vaccine" id="vacina2">
+                        <div>Vacina 2</div>
+                        <div class="status"><span class="alert" id="status2">!</span></div>
+                    </div>
+
+                    <div class="vaccine" id="vacina3">
+                        <div>Vacina 3</div>
+                        <div class="status"><span class="alert" id="status3">!</span></div>
+                    </div>
+
+                    <div class="vaccine" id="vacina4">
+                        <div>Vacina 4</div>
+                        <div class="status"><span class="ok" id="status4">✔</span></div>
+                    </div>
+
+                    <div class="vaccine" id="vacina5">
+                        <div>Vacina 5</div>
+                        <div class="status"><span class="alert" id="status5">!</span></div>
+                    </div>
+
+                </div>
+
+                <div class="section-title" id="conquistaTitle" style="margin-top:20px;">Conquistas</div>
+                <div class="card" id="conquistaCard">
+
+                    <div class="badge" id="badgeSaudavel">
+                        <span>🎖️ Bebé Saudável</span>
+                        <span>›</span>
+                    </div>
+
+                    <div class="badge" id="badgeHistorico">
+                        <span>🎡 Ver historico</span>
+                        <span>›</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="salva.js"></script>
+</body>
+
+</html>
