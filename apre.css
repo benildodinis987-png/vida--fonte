@@ -1,18 +1,30 @@
+/* ================================
+   CONFIGURAÇÃO GERAL
+================================ */
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: Segoe UI, sans-serif;
     background: #cfd8dc;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 25px;
 }
 
 
-/* Fundo de todas as paginas */
+/* ================================
+   FUNDO DE TODAS AS PÁGINAS
+================================ */
 
 .container {
-    width: 1000px;
+    width: 100%;
+    max-width: 1000px;
     background: #eee;
     border-radius: 20px;
     padding: 25px;
@@ -20,7 +32,9 @@ body {
 }
 
 
-/* cabeca */
+/* ================================
+   CABEÇALHO
+================================ */
 
 header {
     display: flex;
@@ -35,7 +49,9 @@ header {
 }
 
 
-/* Nome da plataforma */
+/* ================================
+   NOME DA PLATAFORMA
+================================ */
 
 .title {
     font-size: 32px;
@@ -43,7 +59,7 @@ header {
 }
 
 
-/* palavras tocadas do nome */
+/* PALAVRAS ABAIXO DO NOME */
 
 .subtitle {
     color: #666;
@@ -51,9 +67,14 @@ header {
     margin-bottom: 20px;
 }
 
+
+/* ================================
+   GRELHA PRINCIPAL
+================================ */
+
 .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 20px;
 }
 
@@ -62,12 +83,18 @@ header {
     padding: 18px;
     border-radius: 15px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 0;
 }
 
 .section-title {
     font-weight: bold;
     margin-bottom: 15px;
 }
+
+
+/* ================================
+   MÓDULOS DE APRENDIZAGEM
+================================ */
 
 .lesson {
     padding: 14px;
@@ -92,6 +119,11 @@ header {
     cursor: pointer;
 }
 
+
+/* ================================
+   PROGRESSO
+================================ */
+
 .progress {
     background: #ddd;
     height: 10px;
@@ -105,6 +137,11 @@ header {
     border-radius: 10px;
     width: 60%;
 }
+
+
+/* ================================
+   QUIZ
+================================ */
 
 .quiz-card {
     background: #f4c542;
@@ -124,6 +161,11 @@ header {
     cursor: pointer;
 }
 
+
+/* ================================
+   VÍDEOS
+================================ */
+
 .video {
     display: flex;
     gap: 10px;
@@ -134,6 +176,7 @@ header {
 .thumb {
     width: 80px;
     height: 60px;
+    flex-shrink: 0;
     background: #ccc;
     border-radius: 10px;
 }
@@ -152,13 +195,19 @@ header {
 .mmm {
     display: grid;
     justify-content: center;
-
 }
+
+
+/* ================================
+   PARTE INFERIOR
+================================ */
+
 .baixo {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
     align-items: center;
+    gap: 15px;
 }
 
 .pdf {
@@ -170,6 +219,11 @@ header {
     font-weight: bold;
 }
 
+
+/* ================================
+   POP-UP DOS MÓDULOS
+================================ */
+
 .area-modulo {
     display: none;
     position: fixed;
@@ -178,6 +232,8 @@ header {
     transform: translate(-50%, -50%);
     width: 90%;
     max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
     background-color: #fff3e6;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
@@ -192,6 +248,7 @@ header {
         transform: translate(-50%, -70%);
         opacity: 0;
     }
+
     100% {
         transform: translate(-50%, -50%);
         opacity: 1;
@@ -236,4 +293,109 @@ header {
     padding: 10px;
     background-color: #ffe6cc;
     border-radius: 8px;
+}
+
+
+/* ================================
+   TABLETS
+================================ */
+
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .container {
+        padding: 20px;
+    }
+}
+
+
+/* ================================
+   TELEMÓVEIS
+================================ */
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .title {
+        font-size: 26px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+
+    .back {
+        margin-top: 25px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .quiz-card {
+        padding: 20px;
+    }
+
+    .baixo {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .pdf {
+        width: 100%;
+    }
+
+    .area-modulo {
+        width: 94%;
+        padding: 15px;
+    }
+}
+
+
+/* ================================
+   ECRÃS MUITO PEQUENOS
+================================ */
+
+@media (max-width: 350px) {
+    body {
+        padding: 5px;
+    }
+
+    .container {
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+
+    .lesson {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .video {
+        font-size: 14px;
+    }
+
+    .thumb {
+        width: 65px;
+        height: 50px;
+    }
 }
