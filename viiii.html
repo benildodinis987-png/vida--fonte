@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIDAFONTE - Modo Cinema Claro</title>
+    <title>VIDAFONTE - Saúde Infantil e Nutrição</title>
 
     <style>
         :root {
-            --bg-principal: #ffffff;
+            --bg-diretor: #ffffff;
             --bg-card: #f8fafc;
             --accent: #2563eb;
             --texto: #0f172a;
@@ -20,10 +20,14 @@
             box-sizing: border-box;
         }
 
+        html {
+            width: 100%;
+        }
+
         body {
             margin: 0;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg-principal);
+            background: var(--bg-diretor);
             color: var(--texto);
             overflow-x: hidden;
             min-height: 100vh;
@@ -39,6 +43,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
+        /* HEADER */
         .header {
             display: flex;
             justify-content: space-between;
@@ -50,24 +55,34 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            min-width: 0;
         }
 
         .logo img {
             width: 50px;
             height: auto;
+            flex-shrink: 0;
         }
 
+        .logo small {
+            color: var(--sub-texto);
+        }
+
+        /* MENU DROPDOWN */
         .menu-container {
             position: relative;
+            display: inline-block;
+            cursor: pointer;
+            flex-shrink: 0;
         }
 
         .menu-btn {
             cursor: pointer;
-            padding: 10px 18px;
+            padding: 14px;
             border-radius: 10px;
-            background: var(--accent);
-            color: white;
+            width: 100px;
             border: none;
+            background: #e2e8f0;
             font-weight: 600;
         }
 
@@ -76,33 +91,115 @@
             position: absolute;
             top: 100%;
             right: 0;
-            width: 200px;
-            background: white;
+            width: 220px;
+            max-width: calc(100vw - 30px);
+            background: rgb(227, 227, 235);
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             z-index: 1000;
-        }
-
-        .dropdown.show {
-            display: block;
         }
 
         .dropdown a {
             display: block;
             padding: 12px;
             text-decoration: none;
-            color: var(--texto);
-            border-bottom: 1px solid var(--borda-suave);
+            color: #222;
+            border-bottom: 1px solid #eee;
         }
 
+        .dropdown a:hover {
+            background: #f5f5f5;
+        }
+
+        /* BARRA DE PESQUISA E SUGESTÕES */
+        .search-wrapper {
+            position: relative;
+            margin: 25px 0 15px 0;
+            width: 100%;
+        }
+
+        .search-bar-container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .search-bar-container input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 1px solid var(--borda-suave);
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            background: var(--bg-card);
+            transition: border-color 0.2s;
+        }
+
+        .search-bar-container input:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        .search-bar-container button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-bar-container button:hover {
+            background: #1d4ed8;
+        }
+
+        /* Painel de Sugestões */
+        .suggestions-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid var(--borda-suave);
+            border-radius: 12px;
+            margin-top: 5px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .suggestion-item {
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background: #f1f5f9;
+            color: var(--accent);
+        }
+
+        /* CONTEÚDO PRINCIPAL */
         .content-wrapper {
             width: 100%;
-            padding: 30px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 0 30px;
         }
 
         .secao-player {
             margin-bottom: 40px;
+            position: relative;
         }
 
         .player-moldura {
@@ -110,84 +207,70 @@
             background: #000;
             border-radius: 24px;
             overflow: hidden;
+            box-shadow: 0 20px 50px -15px rgba(15, 23, 42, 0.15);
             aspect-ratio: 16 / 9;
+            border: 1px solid var(--borda-suave);
         }
 
         #videoPrincipal {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            border: none;
+        }
+
+        /* INFORMAÇÕES DO VÍDEO */
+        .info-video-principal {
+            margin-top: 24px;
         }
 
         .tag-canal {
             display: inline-block;
-            background: rgba(37, 99, 235, 0.1);
+            background: rgba(37, 99, 235, 0.08);
             color: var(--accent);
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
         }
 
         h1#tituloVideo {
-            font-size: 26px;
-            margin: 10px 0;
+            font-size: 24px;
+            margin: 0 0 16px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        .acoes-lista {
-            display: flex;
-            gap: 12px;
+        .descricao-texto {
+            color: var(--sub-texto);
+            font-size: 15px;
+            line-height: 1.6;
             margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .btn-acao {
-            background: var(--bg-card);
-            border: 1px solid var(--borda-suave);
-            padding: 10px 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--texto);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .btn-acao:hover {
-            background: #e2e8f0;
-        }
-
-        /* BARRA DE FILTROS E PESQUISA */
-        .painel-filtros {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .input-pesquisa, .select-filtro {
-            padding: 12px 16px;
-            border: 1px solid var(--borda-suave);
-            border-radius: 12px;
-            font-size: 14px;
-            outline: none;
-            background: var(--bg-card);
-        }
-
-        .input-pesquisa {
-            flex: 1;
-            min-width: 200px;
         }
 
         /* VITRINE DE VÍDEOS */
+        .secao-vitrine {
+            margin-top: 40px;
+        }
+
+        .vitrine-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .vitrine-titulo {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+
         .grade-conteudo {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
             gap: 20px;
         }
 
@@ -197,20 +280,23 @@
             overflow: hidden;
             cursor: pointer;
             border: 1px solid var(--borda-suave);
-            transition: transform 0.2s;
+            transition: transform 0.3s, border-color 0.3s;
         }
 
         .card-streaming:hover {
             transform: translateY(-4px);
+            border-color: rgba(37, 99, 235, 0.4);
         }
 
         .preview-video-container {
             width: 100%;
             aspect-ratio: 16 / 9;
             background: #000;
+            position: relative;
+            overflow: hidden;
         }
 
-        .preview-video-container video {
+        .preview-video-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -220,16 +306,36 @@
             padding: 15px;
         }
 
-        .categoria-card {
-            font-size: 11px;
-            color: var(--accent);
-            font-weight: 700;
-            text-transform: uppercase;
+        .detalhes-card h4 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--texto);
         }
 
-        .detalhes-card h4 {
-            margin: 5px 0 0;
-            font-size: 15px;
+        .detalhes-card .categoria-card {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: calc(100% - 20px);
+                padding: 15px;
+            }
+            .grade-conteudo {
+                grid-template-columns: 1fr;
+            }
+            .search-bar-container {
+                flex-direction: column;
+            }
+            .search-bar-container button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -250,155 +356,196 @@
             <div class="menu-container">
                 <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
                 <div class="dropdown" id="menu">
-                    <a href="cooonver.html">Assistente IA</a>
-                    <a href="puto.html">Perfil</a>
-                    <a href="difinicoes.html">Definições</a>
-                    <a href="sobree.html">Sobre</a>
-                    <a href="Login 2.js.html" style="color: red;">Sair da Conta</a>
+                    <a href="cooonver.html"> Assistente IA</a>
+                    <a href="puto.html"> Perfil</a>
+                    <a href="difinicoes.html"> Definições</a>
+                    <a href="acessibilidade.html"> Acessibilidade</a>
+                    <a href="feedback.html"> Feedback</a>
+                    <a href="Denuncia.html"> Denúncia</a>
+                    <a href="sobree.html">ℹ Sobre</a>
+                    <a href="Login 2.js.html"> Sair da Conta</a>
                 </div>
             </div>
         </div>
 
+        <!-- BARRA DE PESQUISA COM AUTOCOMPLETE -->
+        <div class="search-wrapper">
+            <div class="search-bar-container">
+                <input type="text" id="campoPesquisa" placeholder="Pesquisar vídeos no YouTube..." autocomplete="off">
+                <button onclick="realizarPesquisa()">Buscar</button>
+            </div>
+            <div id="caixaSugestoes" class="suggestions-box"></div>
+        </div>
+
+        <!-- CONTEÚDO PRINCIPAL -->
         <div class="content-wrapper">
-            <!-- PLAYER PRINCIPAL -->
+            
             <section class="secao-player">
                 <div class="player-moldura">
-                    <video id="videoPrincipal" controls autoplay></video>
+                    <iframe id="videoPrincipal" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
 
                 <div class="info-video-principal">
-                    <span class="tag-canal" id="categoriaAtual">Vidafonte Original</span>
+                    <span class="tag-canal">VIDAFONTE</span>
                     <h1 id="tituloVideo">Carregando conteúdo...</h1>
-
-                    <div class="acoes-lista">
-                        <!-- BOTÃO DE DOWNLOAD ADICIONADO -->
-                        <a id="btnDownload" class="btn-acao" download target="_blank">
-                            📥 Baixar Vídeo
-                        </a>
-                        <button class="btn-acao" onclick="copiarLink()">🔗 Copiar Ligação</button>
-                    </div>
-
                     <p class="descricao-texto">
-                        Espaço dedicado ao bem-estar e desenvolvimento coletivo. Vídeo integrado na plataforma de formação comunitária VIDAFONTE.
+                        Espaço dedicado ao bem-estar, direitos e alimentação saudável na infância. Conteúdo educacional fornecido pela comunidade e órgãos de saúde.
                     </p>
                 </div>
             </section>
 
-            <!-- VITRINE COM FILTROS -->
             <section class="secao-vitrine">
-                <h3>Explorar e Filtrar Conteúdos</h3>
-                
-                <div class="painel-filtros">
-                    <input type="text" id="campoPesquisa" class="input-pesquisa" placeholder="Pesquisar por título..." oninput="filtrarVideos()">
-                    <select id="filtroCategoria" class="select-filtro" onchange="filtrarVideos()">
-                        <option value="todas">Todas as Categorias</option>
-                        <option value="Nutrição">Nutrição</option>
-                        <option value="Saúde Família">Saúde Família</option>
-                        <option value="Segurança Alimentar">Segurança Alimentar</option>
-                    </select>
+                <div class="vitrine-topo">
+                    <h3 class="vitrine-titulo">Vídeos Relacionados</h3>
                 </div>
-
-                <div id="listaVideosLaterais" class="grade-conteudo"></div>
+                
+                <div id="listaVideosLaterais" class="grade-conteudo">
+                    <!-- Vídeos atualizados dinamicamente -->
+                </div>
             </section>
+
         </div>
     </div>
 
     <script>
-        // Catálogo Ampliado com Categorias para Filtragem Ilimitada
-        const catalogo = [
-            { titulo: "Casos de Nutrição Infantil", video: "hospital.mp4", categoria: "Nutrição" },
-            { titulo: "Como cuidar da tua família", video: "nut.mp4", categoria: "Saúde Família" },
-            { titulo: "Alimentação Segura", video: "unicef.mp4", categoria: "Segurança Alimentar" }
-        ];
+        const API_KEY = 'AIzaSyAIVenDhGIM1LxmKqV6yWnnQmt8FpguHSk'; 
 
-        // Leitura dos Parâmetros da URL
-        const urlParams = new URLSearchParams(window.location.search);
-        let videoAlvo = urlParams.get("video") || catalogo[0].video;
-        let tituloAlvo = urlParams.get("titulo") || catalogo[0].titulo;
-
-        const playerPrincipal = document.getElementById("videoPrincipal");
-        const areaTitulo = document.getElementById("tituloVideo");
-        const btnDownload = document.getElementById("btnDownload");
-        const areaCategoria = document.getElementById("categoriaAtual");
-
-        // Carregar Vídeo Inicial
-        function carregarVideoPrincipal(src, titulo) {
-            playerPrincipal.src = src;
-            areaTitulo.innerText = decodeURIComponent(titulo);
-            document.title = decodeURIComponent(titulo) + " - VIDAFONTE";
-
-            // Configura o Botão de Download
-            btnDownload.href = src;
-            btnDownload.setAttribute("download", decodeURIComponent(titulo) + ".mp4");
-
-            // Atualiza a Tag de Categoria
-            const itemEncontrado = catalogo.find(item => item.video === src);
-            if (itemEncontrado) {
-                areaCategoria.innerText = itemEncontrado.categoria;
-            }
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
         }
 
-        // Renderizar Galeria com Filtros
-        function renderizarGaleria(lista) {
-            const containerVitrine = document.getElementById("listaVideosLaterais");
-            containerVitrine.innerHTML = "";
+        /* AUTOCOMPLETE / SUGESTÕES DE PESQUISA */
+        const campoPesquisa = document.getElementById('campoPesquisa');
+        const caixaSugestoes = document.getElementById('caixaSugestoes');
 
-            if (lista.length === 0) {
-                containerVitrine.innerHTML = "<p style='grid-column: 1/-1; color: var(--sub-texto);'>Nenhum vídeo encontrado com estes critérios.</p>";
+        campoPesquisa.addEventListener('input', async function () {
+            const termo = this.value.trim();
+            if (termo.length < 2) {
+                caixaSugestoes.style.display = 'none';
                 return;
             }
 
-            lista.forEach(item => {
+            // Busca sugestões da API de autocomplete do YouTube via JSONP
+            const script = document.createElement('script');
+            script.src = `https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=${encodeURIComponent(termo)}&jsonp=processarSugestoes`;
+            document.body.appendChild(script);
+            document.body.removeChild(script);
+        });
+
+        window.processarSugestoes = function (data) {
+            const sugestoes = data[1];
+            caixaSugestoes.innerHTML = '';
+
+            if (sugestoes && sugestoes.length > 0) {
+                sugestoes.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.innerText = item[0];
+                    div.onclick = () => {
+                        campoPesquisa.value = item[0];
+                        caixaSugestoes.style.display = 'none';
+                        realizarPesquisa();
+                    };
+                    caixaSugestoes.appendChild(div);
+                });
+                caixaSugestoes.style.display = 'block';
+            } else {
+                caixaSugestoes.style.display = 'none';
+            }
+        };
+
+        // Ocultar sugestões ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!campoPesquisa.contains(e.target) && !caixaSugestoes.contains(e.target)) {
+                caixaSugestoes.style.display = 'none';
+            }
+        });
+
+        campoPesquisa.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                caixaSugestoes.style.display = 'none';
+                realizarPesquisa();
+            }
+        });
+
+        function realizarPesquisa() {
+            const termoUsuario = campoPesquisa.value.trim();
+            if (termoUsuario) {
+                carregarVideosYouTube(termoUsuario);
+            } else {
+                carregarVideosYouTube('nutricao infantil');
+            }
+        }
+
+        /* CARREGAMENTO DE VÍDEOS DO YOUTUBE */
+        async function carregarVideosYouTube(termoBusca) {
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&q=${encodeURIComponent(termoBusca)}&type=video&key=${API_KEY}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    const primeiroVideo = data.items[0];
+                    atualizarPlayer(primeiroVideo.id.videoId, primeiroVideo.snippet.title);
+
+                    renderizarVitrine(data.items.slice(1));
+                } else {
+                    document.getElementById('tituloVideo').innerText = "Nenhum vídeo encontrado.";
+                }
+            } catch (error) {
+                console.error("Erro ao carregar vídeos:", error);
+                document.getElementById('tituloVideo').innerText = "Erro ao conectar com a API do YouTube.";
+            }
+        }
+
+        function renderizarVitrine(videos) {
+            const containerVitrine = document.getElementById("listaVideosLaterais");
+            containerVitrine.innerHTML = '';
+
+            videos.forEach(item => {
+                const videoId = item.id.videoId;
+                const titulo = item.snippet.title;
+                const capa = item.snippet.thumbnails.high.url;
+
                 containerVitrine.innerHTML += `
-                    <div class="card-streaming" onclick="reproduzirOutro('${item.video}', '${item.titulo}')">
+                    <div class="card-streaming" onclick="selecionarEVisto('${videoId}', '${escapeHtml(titulo)}')">
                         <div class="preview-video-container">
-                            <video muted preload="metadata">
-                                <source src="${item.video}" type="video/mp4">
-                            </video>
+                            <img src="${capa}" alt="${titulo}">
                         </div>
                         <div class="detalhes-card">
-                            <div class="categoria-card">${item.categoria}</div>
-                            <h4>${item.titulo}</h4>
+                            <div class="categoria-card">YouTube</div>
+                            <h4>${titulo}</h4>
+                            <p>VIDAFONTE</p>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // Sistema de Filtragem Ilimitado
-        function filtrarVideos() {
-            const textoPesquisa = document.getElementById("campoPesquisa").value.toLowerCase();
-            const categoriaSelecionada = document.getElementById("filtroCategoria").value;
-
-            const videosFiltrados = catalogo.filter(item => {
-                const combinaTexto = item.titulo.toLowerCase().includes(textoPesquisa);
-                const combinaCategoria = categoriaSelecionada === "todas" || item.categoria === categoriaSelecionada;
-                
-                return combinaTexto && combinaCategoria;
-            });
-
-            renderizarGaleria(videosFiltrados);
+        /* CLIQUE NO VÍDEO: ATUALIZA O PLAYER E ATUALIZA A VITRINE DINAMICAMENTE */
+        function selecionarEVisto(videoId, titulo) {
+            atualizarPlayer(videoId, titulo);
+            // Busca novos vídeos com base no título do vídeo recém-selecionado
+            carregarVideosYouTube(titulo);
         }
 
-        // Troca Dinâmica de Vídeo
-        function reproduzirOutro(novoVideo, novoTitulo) {
-            window.location.href = window.location.pathname + "?video=" + encodeURIComponent(novoVideo) + "&titulo=" + encodeURIComponent(novoTitulo);
+        function atualizarPlayer(videoId, titulo) {
+            const player = document.getElementById('videoPrincipal');
+            const origin = window.location.origin !== "null" ? window.location.origin : "http://localhost";
+            
+            player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&origin=${encodeURIComponent(origin)}`;
+            document.getElementById('tituloVideo').innerText = titulo;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Copiar Link
-        function copiarLink() {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link copiado com sucesso!");
+        function escapeHtml(text) {
+            return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
 
-        // Abrir/Fechar Menu
-        function toggleMenu() {
-            document.getElementById("menu").classList.toggle("show");
-        }
-
-        // Inicialização
-        carregarVideoPrincipal(videoAlvo, tituloAlvo);
-        renderizarGaleria(catalogo);
+        window.onload = () => carregarVideosYouTube('nutricao infantil');
     </script>
+
 </body>
 </html>
