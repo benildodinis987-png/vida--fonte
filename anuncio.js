@@ -1,138 +1,203 @@
+/* ==========================================================================
+   SISTEMA DE NOTIFICAÇÕES DINÂMICAS COM DATAS EXACTAS (escript.gb.js)
+   ========================================================================== */
+
+let indiceAlertaAtual = 0;
+let listaNotificacoesGlobais = [];
+let intervaloCarrossel = null;
+
 document.addEventListener("DOMContentLoaded", () => {
     carregarAlertasAutomaticos();
 });
 
-function carregarAlertasAutomaticos() {
-    const alertaBox = document.getElementById("real");
-    if (!alertaBox) return;
+// 1. LEITURA INTELIGENTE DO CADASTRO ('dadosBebe' ou 'usuario')
+function obterDadosCadastrados() {
+    let dados = JSON.parse(localStorage.getItem("dadosBebe"));
+    if (!dados) {
+        dados = JSON.parse(localStorage.getItem("usuario"));
+    }
 
-    // Recupera dados salvos do bebê
-    const cadastro = JSON.parse(localStorage.getItem("dadosBebe")) || {
-        nome: "Bebê",
-        dataNascimento: "2024-01-01" // Data padrão caso não exista cadastro
+    return {
+        nome: (dados && dados.nome) ? dados.nome : "Bebê",
+        dataNascimento: (dados && dados.dataNascimento) ? dados.dataNascimento : (dados && dados.dataNasc ? dados.dataNasc : "2024-01-01")
     };
-    
+}
+
+// 2. CÁLCULO DE DATAS
+function adicionarMeses(dataBase, meses) {
+    let d = new Date(dataBase);
+    d.setMonth(d.getMonth() + meses);
+    return d.toLocaleDateString('pt-PT');
+}
+
+// 3. MONITORAMENTO E GERAÇÃO DE NOTIFICAÇÕES
+function carregarAlertasAutomaticos() {
+    const alertaContainer = document.getElementById("real");
+    if (!alertaContainer) return;
+
+    const cadastro = obterDadosCadastrados();
     const medicoes = JSON.parse(localStorage.getItem("medicoes")) || [];
 
-    // Calcula idade em meses
     const hoje = new Date();
     const nascimento = new Date(cadastro.dataNascimento);
-    const idadeMeses = Math.floor((hoje - nascimento) / (1000 * 60 * 60 * 24 * 30.44));
+    
+    let idadeMeses = (hoje.getFullYear() - nascimento.getFullYear()) * 12 + (hoje.getMonth() - nascimento.getMonth());
+    if (hoje.getDate() < nascimento.getDate()) idadeMeses--;
+    idadeMeses = Math.max(0, idadeMeses);
 
-    let listaNotificacoes = [];
+    listaNotificacoesGlobais = [];
 
-    // 1. Monitoramento de Peso e Saúde
+    // A. MONITORAMENTO DE PESO E SAÚDE
     if (medicoes.length > 0) {
         const ultimaMedicao = medicoes[medicoes.length - 1];
-        const imc = ultimaMedicao.peso / ((ultimaMedicao.altura / 100) ** 2);
+        const dataUltima = new Date(ultimaMedicao.data);
+        const proximoControlo = new Date(dataUltima);
+        proximoControlo.setDate(proximoControlo.getDate() + 30);
+        const dataFormatadaControlo = proximoControlo.toLocaleDateString('pt-PT');
 
-        if (imc < 14) {
-            listaNotificacoes.push(`🚨 <strong>Atenção!</strong> O peso de ${cadastro.nome} está abaixo do ideal. Reforce a suplementação.`);
-        } else if (imc > 18) {
-            listaNotificacoes.push(`⚠️ <strong>Alerta Nutricional:</strong> ${cadastro.nome} está acima do peso recomendado para a idade.`);
-        } else {
-            listaNotificacoes.push(`✅ <strong>Saúde em dia:</strong> ${cadastro.nome} está com o peso e altura ideais.`);
+        if (ultimaMedicao.statusEvolucao === "descida") {
+            listaNotificacoesGlobais.push(`🚨 <strong>Alerta Clínico:</strong> ${cadastro.nome} teve uma queda no crescimento na medição de ${ultimaMedicao.data}. Reforce a alimentação! Proxima pesagem recomendada até <strong>${dataFormatadaControlo}</strong>.`);
+        } else if (ultimaMedicao.braco && ultimaMedicao.braco < 11.5) {
+            listaNotificacoesGlobais.push(`🚨 <strong>Atenção Vermelha:</strong> O braço de ${cadastro.nome} (${ultimaMedicao.braco}cm) indica risco nutricional grave. Visite o posto até <strong>${dataFormatadaControlo}</strong>.`);
+        } else if (ultimaMedicao.peso && ultimaMedicao.altura) {
+            listaNotificacoesGlobais.push(`✅ <strong>Saúde em dia:</strong> ${cadastro.nome} está com ${ultimaMedicao.peso}kg em ${ultimaMedicao.data}. Próxima pesagem agendada para <strong>${dataFormatadaControlo}</strong>.`);
         }
     } else {
-        listaNotificacoes.push(`📌 <strong>Registo Pendente:</strong> Nenhuma medição recente encontrada. Registe o peso e altura.`);
+        const dataAmanha = new Date();
+        dataAmanha.setDate(dataAmanha.getDate() + 1);
+        listaNotificacoesGlobais.push(`📌 <strong>Registo Pendente:</strong> Nenhuma medição registada para ${cadastro.nome}. Agende a 1ª pesagem para <strong>${dataAmanha.toLocaleDateString('pt-PT')}</strong>.`);
     }
 
-    // 2. Calendário de Vacinas Automático (0 aos 6 anos)
-    const vacinaPendente = verificarVacinas(idadeMeses);
-    if (vacinaPendente) {
-        listaNotificacoes.push(`💉 <strong>Vacina Pendente:</strong> ${vacinaPendente}`);
+    // B. CALENDÁRIO DE VACINAS COM DATAS EXACTAS
+    const proximaVacina = obterProximaVacinaEData(nascimento, idadeMeses);
+    if (proximaVacina) {
+        listaNotificacoesGlobais.push(`💉 <strong>Agenda de Vacinação:</strong> ${cadastro.nome} tem agendada a vacina <strong>${proximaVacina.nome}</strong> para o dia <strong>${proximaVacina.data}</strong>.`);
     }
 
-    // 3. Agendamento de Consultas de Rotina
+    // C. AGENDAMENTO DE CONSULTA DE ROTINA
+    let dataConsulta = new Date();
     if (idadeMeses <= 12) {
-        listaNotificacoes.push(`🩺 <strong>Consulta Mensal:</strong> Acompanhamento de rotina recomendado para este mês.`);
-    } else if (idadeMeses <= 24 && idadeMeses % 3 === 0) {
-        listaNotificacoes.push(`🩺 <strong>Consulta Trimestral:</strong> Hora do check-up de desenvolvimento.`);
-    } else if (idadeMeses > 24 && idadeMeses % 6 === 0) {
-        listaNotificacoes.push(`🩺 <strong>Consulta Semestral:</strong> Exame de rotina aos ${Math.floor(idadeMeses / 12)} anos.`);
+        dataConsulta.setMonth(dataConsulta.getMonth() + 1);
+        listaNotificacoesGlobais.push(`🩺 <strong>Consulta Mensal:</strong> Próxima consulta de acompanhamento do(a) ${cadastro.nome} marcada para <strong>${dataConsulta.toLocaleDateString('pt-PT')}</strong>.`);
+    } else if (idadeMeses <= 24) {
+        dataConsulta.setMonth(dataConsulta.getMonth() + 3);
+        listaNotificacoesGlobais.push(`🩺 <strong>Consulta Trimestral:</strong> Próximo check-up de desenvolvimento agendado para <strong>${dataConsulta.toLocaleDateString('pt-PT')}</strong>.`);
+    } else {
+        dataConsulta.setMonth(dataConsulta.getMonth() + 6);
+        listaNotificacoesGlobais.push(`🩺 <strong>Consulta Semestral:</strong> Próximo exame de rotina agendado para <strong>${dataConsulta.toLocaleDateString('pt-PT')}</strong>.`);
     }
 
-    // Renderização dos Alertas na Página Inicial
-    alertaBox.innerHTML = `
-        <div class="alert-title">🚨 Painel de Acompanhamento do Bebê (${cadastro.nome})</div>
-        ${listaNotificacoes.map(item => `<div class="alert-box" style="margin-top:8px;">${item}</div>`).join('')}
-    `;
+    // INICIAR EXIBIÇÃO DINÂMICA
+    iniciarCarrosselAlertas(alertaContainer, cadastro.nome);
 }
 
-// Tabela de Vacinação Nacional (0 a 6 anos)
-function verificarVacinas(meses) {
-    if (meses === 0) return "BCG e Hepatite B (Ao nascer)";
-    if (meses === 2) return "Penta (1ª dose), Polio VIP (1ª dose), Rotavírus (1ª dose)";
-    if (meses === 3) return "Meningocócica C (1ª dose)";
-    if (meses === 4) return "Penta (2ª dose), Polio VIP (2ª dose), Rotavírus (2ª dose)";
-    if (meses === 5) return "Meningocócica C (2ª dose)";
-    if (meses === 6) return "Penta (3ª dose), Polio VIP (3ª dose)";
-    if (meses === 9) return "Febre Amarela";
-    if (meses === 12) return "Tríplice Viral (1ª dose), Pneumocócica (Reforço)";
-    if (meses === 15) return "DTP (1º Reforço), Polio VOP, Hepatite A";
-    if (meses === 48) return "DTP (2º Reforço), Polio VOP, Varicela (4 anos)";
-    return null;
+// 4. TABELA DE VACINAS COM CÁLCULO DE DATA EXACTA
+function obterProximaVacinaEData(dataNasc, mesesAtuais) {
+    const cronograma = [
+        { mes: 0, nome: "BCG e Hepatite B" },
+        { mes: 2, nome: "Penta (1ª dose), Polio VIP, Rotavírus" },
+        { mes: 3, nome: "Meningocócica C (1ª dose)" },
+        { mes: 4, nome: "Penta (2ª dose), Polio VIP, Rotavírus" },
+        { mes: 5, nome: "Meningocócica C (2ª dose)" },
+        { mes: 6, nome: "Penta (3ª dose), Polio VIP" },
+        { mes: 9, nome: "Febre Amarela" },
+        { mes: 12, nome: "Tríplice Viral (1ª dose), Pneumocócica" },
+        { mes: 15, nome: "DTP (1º Reforço), Polio VOP, Hepatite A" },
+        { mes: 48, nome: "DTP (2º Reforço), Varicela" }
+    ];
+
+    let proxima = cronograma.find(item => item.mes >= mesesAtuais);
+    if (!proxima) proxima = cronograma[cronograma.length - 1];
+
+    const dataPrevista = adicionarMeses(dataNasc, proxima.mes);
+    return { nome: proxima.nome, data: dataPrevista };
 }
 
+// 5. ANIMAÇÃO DINÂMICA (UM POR UM)
+function iniciarCarrosselAlertas(container, nomeBebe) {
+    if (listaNotificacoesGlobais.length === 0) return;
 
+    if (intervaloCarrossel) clearInterval(intervaloCarrossel);
+
+    function exibirProximo() {
+        const mensagemAtual = listaNotificacoesGlobais[indiceAlertaAtual];
+        
+        container.innerHTML = `
+            <div class="alert-title">🚨 Notificações de Saúde (${nomeBebe})</div>
+            <div class="alert-box" style="
+                margin-top: 8px; 
+                transition: opacity 0.5s ease-in-out; 
+                animation: fadeIn 0.6s ease-in-out;
+            ">
+                ${mensagemAtual}
+            </div>
+            <div style="text-align: right; font-size: 10px; color: #64748b; margin-top: 4px;">
+                Alerta ${indiceAlertaAtual + 1} de ${listaNotificacoesGlobais.length}
+            </div>
+        `;
+
+        indiceAlertaAtual = (indiceAlertaAtual + 1) % listaNotificacoesGlobais.length;
+    }
+
+    // Estilo CSS de Animação
+    if (!document.getElementById("animacao-alerta-style")) {
+        const style = document.createElement("style");
+        style.id = "animacao-alerta-style";
+        style.innerHTML = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-5px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    exibirProximo();
+    // Alterna o alerta a cada 4 segundos
+    intervaloCarrossel = setInterval(exibirProximo, 4000);
+}
+
+// 6. ANÚNCIO E NAVEGAÇÃO
 const ad = document.getElementById("adOverlay");
 const video = document.getElementById("adVideo");
 const closeBtn = document.getElementById("closeAd");
 
-// verificar se já mostrou o anúncio nesta sessão
-if (!sessionStorage.getItem("adShown")) {
-
-    ad.style.display = "flex"; // ou block, depende do seu CSS
+if (ad && !sessionStorage.getItem("adShown")) {
+    ad.style.display = "flex";
     sessionStorage.setItem("adShown", "true");
 
-    // fechar manual
-    closeBtn.onclick = () => {
-        ad.style.display = "none";
-        video.pause();
-    };
+    if (closeBtn) {
+        closeBtn.onclick = () => {
+            ad.style.display = "none";
+            if (video) video.pause();
+        };
+    }
 
-    // fechar automático após 7.3s
     setTimeout(() => {
         ad.style.display = "none";
-        video.pause();
+        if (video) video.pause();
     }, 7270);
 
-    // fechar quando video terminar
-    video.onended = () => {
-        ad.style.display = "none";
-    };
-
-} else {
-    // se já mostrou, garante que fique escondido
+    if (video) {
+        video.onended = () => {
+            ad.style.display = "none";
+        };
+    }
+} else if (ad) {
     ad.style.display = "none";
 }
 
-// MENU
-
-function toggleMenu(){
-  let menu = document.getElementById("menu");
-
-  if(menu.style.display === "block"){
-      menu.style.display = "none";
-  }else{
-      menu.style.display = "block";
-  }
+function toggleMenu() {
+    let menu = document.getElementById("menu");
+    if (!menu) return;
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
 }
 
-
-
 function irParaPlayer(video, titulo) {
-            // Redireciona corretamente para o ficheiro VIDIOSS.HTML passando as variáveis organizadas
-            window.location.href = "viiii.html?video=" + encodeURIComponent(video) + "&titulo=" + encodeURIComponent(titulo);
-        }
+    window.location.href = "viiii.html?video=" + encodeURIComponent(video) + "&titulo=" + encodeURIComponent(titulo);
+}
 
-        // Efeito premium: Reproduz automaticamente uma pré-visualização rápida ao passar o rato
-        document.querySelectorAll(".thumbnail-container video").forEach(v => {
-            v.addEventListener("mouseenter", () => {
-                v.play().catch(e => console.log("Autoplay suspenso"));
-            });
-            v.addEventListener("mouseleave", () => {
-                v.pause();
-                v.currentTime = 0; // Volta ao início para manter o aspeto limpo
-            });
-        });
+document.querySelectorAll(".thumbnail-container video").forEach(v => {
+    v.addEventListener("mouseenter", () => { v.play().catch(() => {}); });
+    v.addEventListener("mouseleave", () => { v.pause(); v.currentTime = 0; });
+});
