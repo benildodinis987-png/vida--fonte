@@ -1,18 +1,46 @@
 // Carrega dados salvos no navegador (localStorage)
 let medicoes = JSON.parse(localStorage.getItem("medicoes")) || [];
-let dadosBebe = JSON.parse(localStorage.getItem("dadosBebe")) || { dataNascimento: "2024-01-01" };
+let dadosBebe = JSON.parse(localStorage.getItem("dadosBebe")) || { nome: "Mwanene", dataNascimento: "2024-01-01" };
 
 window.onload = function() {
     renderizarCaminhadaEvolutiva();
     atualizarHistorico();
+    preencherIdadeAutomatica();
+
     if (medicoes.length > 0) {
         const ult = medicoes[medicoes.length - 1];
         realizarAvaliacaoSaude(ult);
     }
+
+    // Ouve a alteração do campo de data para calcular idade automaticamente
+    const campoData = document.getElementById("data");
+    if (campoData) {
+        campoData.addEventListener("change", preencherIdadeAutomatica);
+    }
 };
 
-// Calcula a idade em meses
+// Obter nome do bebé registado no cadastro
+function obterNomeBebe() {
+    return dadosBebe && dadosBebe.nome ? dadosBebe.nome : "Mwanene";
+}
+
+// Preenche o campo de idade automaticamente no formulário
+function preencherIdadeAutomatica() {
+    const campoData = document.getElementById("data");
+    const campoIdade = document.getElementById("idade");
+
+    let dataRef = (campoData && campoData.value) ? campoData.value : new Date().toISOString().split('T')[0];
+    const meses = calcularIdadeEmMeses(dataRef, dadosBebe.dataNascimento);
+    const textoIdade = formatarIdade(meses);
+
+    if (campoIdade) {
+        campoIdade.value = textoIdade;
+    }
+}
+
+// Calcula a idade em meses comparando a data da medição com a data de nascimento
 function calcularIdadeEmMeses(dataMedicao, dataNasc) {
+    if (!dataNasc) return 0;
     const inicio = new Date(dataNasc);
     const fim = new Date(dataMedicao);
     let meses = (fim.getFullYear() - inicio.getFullYear()) * 12 + (fim.getMonth() - inicio.getMonth());
@@ -35,8 +63,10 @@ function registrarMedicao() {
     const braco = parseFloat(document.getElementById("braco").value);
     const cranio = parseFloat(document.getElementById("cranio")?.value || 0);
 
+    const nomeCrianca = obterNomeBebe();
+
     if (!data || isNaN(peso) || isNaN(altura) || isNaN(braco)) {
-        alert("Eish, mamã! Preenche a data, peso, altura e braço do mwanene direitinho, tá bom?");
+        alert(`Eish, mamã! Preenche a data, peso, altura e braço do(a) ${nomeCrianca} direitinho, tá bom?`);
         return;
     }
 
@@ -72,12 +102,13 @@ function registrarMedicao() {
     limparCampos();
 }
 
-// Renderiza a montanha, parque de diversões, régua e o bebé caminhando com braços
+// Renderiza a caminhada na montanha e régua
 function renderizarCaminhadaEvolutiva() {
     const containerGrafico = document.getElementById("grafico");
-    
+    const nomeCrianca = obterNomeBebe();
+
     if (medicoes.length === 0) {
-        containerGrafico.innerHTML = "<p style='text-align:center; padding: 25px; color: #666;'>Mamã, regista a primeira medição para ver o mwanene a subir a montanha!</p>";
+        containerGrafico.innerHTML = `<p style='text-align:center; padding: 25px; color: #666;'>Mamã, regista a primeira medição para ver o(a) ${nomeCrianca} a subir a montanha!</p>`;
         return;
     }
 
@@ -87,19 +118,16 @@ function renderizarCaminhadaEvolutiva() {
     const ehDescida = ultimaMedicao.statusEvolucao === "descida";
     const corMontanha = ehDescida ? "#e53e3e" : "#22c55e";
 
-    // Cálculo da Posição na Régua / Montanha (0 a 100 cm/pontos)
-    // Usa a altura em cm se disponível, ou o índice de medições
+    // Posição na Régua / Montanha
     let valorCm = Math.min(Math.max(ultimaMedicao.altura || (totalMedicoes * 10), 30), 120);
-    
-    // Mapeamento percentual (30cm = 5% da largura, 120cm = 85% da largura)
     let percentualX = Math.min(Math.max(((valorCm - 30) / 90) * 80 + 5, 5), 82);
-    let percentualY = Math.min((percentualX * 0.75), 65); // Altura na montanha
+    let percentualY = Math.min((percentualX * 0.75), 65);
 
     if (ehDescida) {
         percentualY = Math.max(5, percentualY - 12);
     }
 
-    // Gerar números e marcas da régua na base (de 30 cm a 120 cm)
+    // Marcações da régua em cm
     let tracosRegua = "";
     for (let cm = 30; cm <= 120; cm += 10) {
         let posX = ((cm - 30) / 90) * 80 + 5;
@@ -113,7 +141,6 @@ function renderizarCaminhadaEvolutiva() {
 
     let html = `
         <style>
-            /* Animação de Caminhada Realista (Pernas e Braços) */
             @keyframes animPernaEsq { 0%, 100% { transform: rotate(-25deg); } 50% { transform: rotate(25deg); } }
             @keyframes animPernaDir { 0%, 100% { transform: rotate(25deg); } 50% { transform: rotate(-25deg); } }
             @keyframes animBracoEsq { 0%, 100% { transform: rotate(30deg); } 50% { transform: rotate(-30deg); } }
@@ -160,7 +187,6 @@ function renderizarCaminhadaEvolutiva() {
             
             <!-- PARQUE DE DIVERSÕES AO FUNDO -->
             <svg viewBox="0 0 500 200" style="position: absolute; top: 10px; left: 0; width: 100%; height: 160px; opacity: 0.5;">
-                <!-- Roda Gigante -->
                 <circle cx="80" cy="80" r="45" stroke="#f43f5e" stroke-width="3" fill="none" stroke-dasharray="4,4" />
                 <line x1="80" y1="80" x2="80" y2="135" stroke="#64748b" stroke-width="4" />
                 <line x1="80" y1="80" x2="50" y2="135" stroke="#64748b" stroke-width="3" />
@@ -169,33 +195,31 @@ function renderizarCaminhadaEvolutiva() {
                 <circle cx="125" cy="80" r="5" fill="#3b82f6" />
                 <circle cx="35" cy="80" r="5" fill="#10b981" />
                 
-                <!-- Castelo do Parque -->
                 <path d="M 320 135 L 320 70 L 340 50 L 360 70 L 360 135 Z" fill="#a855f7" />
                 <path d="M 360 135 L 360 90 L 375 75 L 390 90 L 390 135 Z" fill="#ec4899" />
                 <rect x="333" y="90" width="14" height="25" fill="#fef08a" rx="7" />
                 
-                <!-- Circo / Carrossel -->
                 <polygon points="200,135 230,80 260,135" fill="#ef4444" />
                 <polygon points="215,135 230,80 245,135" fill="#ffffff" />
 
-                <!-- Balões no céu -->
                 <circle cx="430" cy="40" r="10" fill="#f43f5e" />
                 <line x1="430" y1="50" x2="425" y2="75" stroke="#94a3b8" />
                 <circle cx="450" cy="55" r="8" fill="#06b6d4" />
                 <line x1="450" y1="63" x2="447" y2="85" stroke="#94a3b8" />
             </svg>
 
-            <p style="position: absolute; top: 6px; width: 100%; text-align:center; font-size:11px; font-weight:bold; color:#0369a1; z-index: 5;">
-                🎪 Parque de Diversões: Mwanene Subindo a Montanha! (Toca nele para falar) 🎡
+            <!-- MENSAGEM DO GRÁFICO ALTERADA -->
+            <p style="position: absolute; top: 6px; width: 100%; text-align:center; font-size:12px; font-weight:bold; color:#0369a1; z-index: 5;">
+                me toca mae quero falar
             </p>
 
-            <!-- MONTANHA VERDE/VERMELHA (RAMPA DE CRESCIMENTO) -->
+            <!-- MONTANHA -->
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position: absolute; bottom: 25px; left: 0; width: 100%; height: 180px; z-index: 2;">
                 <path d="M 0 100 L 0 90 Q 50 65 100 25 L 100 100 Z" fill="${corMontanha}" opacity="0.85" />
                 <path d="M 0 90 Q 50 65 100 25" stroke="#ffffff" stroke-width="2" stroke-dasharray="3,3" fill="none" />
             </svg>
 
-            <!-- BONECO DO BEBÉ (COM BRAÇOS E PERNAS ANIMADOS) -->
+            <!-- BEBÉ -->
             <div style="
                 position: absolute; 
                 bottom: calc(30px + ${percentualY}%); 
@@ -210,54 +234,42 @@ function renderizarCaminhadaEvolutiva() {
 
                 <div class="corpo-bebe-caminhando" onclick="falarBebeBrincalhao()" style="width: 70px; height: 95px;">
                     <svg viewBox="0 0 100 130" width="100%" height="100%">
-                        
-                        <!-- Braço Esquerdo (Fundo) -->
                         <g class="braco-esq">
                             <rect x="25" y="48" width="10" height="28" rx="5" fill="#fca5a5" />
                             <circle cx="30" cy="78" r="5" fill="#fca5a5" />
                         </g>
 
-                        <!-- Perna Esquerda (Fundo) -->
                         <g class="perna-esq">
                             <rect x="40" y="80" width="10" height="32" rx="5" fill="#fca5a5" />
                             <ellipse cx="45" cy="114" rx="8" ry="4" fill="#2563eb" />
                         </g>
 
-                        <!-- Tronco / Roupinha -->
                         <path d="M 36 45 L 64 45 L 60 82 L 40 82 Z" fill="#0284c7" />
-                        <!-- Calções -->
                         <path d="M 38 80 L 62 80 L 62 92 L 38 92 Z" fill="#1e3a8a" />
 
-                        <!-- Perna Direita (Frente) -->
                         <g class="perna-dir">
                             <rect x="50" y="80" width="10" height="32" rx="5" fill="#fca5a5" />
                             <ellipse cx="55" cy="114" rx="8" ry="4" fill="#2563eb" />
                         </g>
 
-                        <!-- Braço Direito (Frente) -->
                         <g class="braco-dir">
                             <rect x="65" y="48" width="10" height="28" rx="5" fill="#fca5a5" />
                             <circle cx="70" cy="78" r="5" fill="#fca5a5" />
                         </g>
 
-                        <!-- Cabeça e Rosto -->
                         <g transform="rotate(-5, 50, 25)">
                             <circle cx="50" cy="26" r="21" fill="#fca5a5" />
-                            <!-- Cabelo -->
                             <path d="M 34 16 Q 50 4 66 16 Q 50 11 34 16 Z" fill="#78350f" />
-                            <!-- Olho -->
                             <circle cx="58" cy="22" r="3" fill="#1e293b" />
                             <circle cx="59" cy="21" r="1" fill="#ffffff" />
-                            <!-- Bochecha -->
                             <circle cx="58" cy="30" r="3.5" fill="#f43f5e" opacity="0.5" />
-                            <!-- Sorriso -->
                             <path d="M 52 31 Q 58 37 63 30" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round" />
                         </g>
                     </svg>
                 </div>
             </div>
 
-            <!-- RÉGUA DE MEDIÇÃO NA BASE (COM NÚMEROS E MARCAÇÕES EM CM) -->
+            <!-- RÉGUA EM CM -->
             <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 26px; background: #f1f5f9; border-top: 2px solid #64748b; z-index: 4;">
                 ${tracosRegua}
             </div>
@@ -268,20 +280,21 @@ function renderizarCaminhadaEvolutiva() {
     containerGrafico.innerHTML = html;
 }
 
-// Fala do bebé natural, humana e brincalhona
+// Fala do bebé com o nome vindo do cadastro
 function falarBebeBrincalhao() {
     if (medicoes.length === 0) return;
 
     const ult = medicoes[medicoes.length - 1];
     const balao = document.getElementById("balaoFala");
+    const nomeCrianca = obterNomeBebe();
     let textoFala = "";
 
     if (ult.statusEvolucao === "descida") {
-        textoFala = "Mamã! O mwanene escorregou na montanha, hiya! Dá-me papinha gostosa para eu subir até ao topo do parque!";
+        textoFala = `Mamã! O(A) ${nomeCrianca} escorregou na montanha, hiya! Dá-me papinha gostosa para eu subir até ao topo!`;
     } else if (ult.altura && ult.altura > 80) {
-        textoFala = `Ehei! Já estou com ${ult.altura} cm na régua! Daqui a nada chego no topo da Roda-Gigante, mamã!`;
+        textoFala = `Ehei! O(A) ${nomeCrianca} já tem ${ult.altura} cm na régua! Daqui a nada chego no topo da Roda-Gigante, mamã!`;
     } else {
-        textoFala = "Olha eu a caminhar na régua! O mwanene está a ficar forte tipo leão! Vamos brincar no parque, mamã?";
+        textoFala = `Olha eu a caminhar! O(A) ${nomeCrianca} está a ficar forte tipo leão! Vamos brincar no parque, mamã?`;
     }
 
     if (balao) {
@@ -290,7 +303,6 @@ function falarBebeBrincalhao() {
         setTimeout(() => { balao.style.display = "none"; }, 6000);
     }
 
-    // Configuração de voz amigável
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         
@@ -308,7 +320,7 @@ function falarBebeBrincalhao() {
     }
 }
 
-// Auto-Avaliação Profissional de Saúde
+// Avaliação de Saúde com Nome Personalizado
 function realizarAvaliacaoSaude(medicao) {
     const status = document.getElementById("status");
     const dicas = document.getElementById("dicas");
@@ -316,6 +328,7 @@ function realizarAvaliacaoSaude(medicao) {
     const p = medicao.peso;
     const a = medicao.altura;
     const muac = medicao.braco;
+    const nomeCrianca = obterNomeBebe();
 
     let mensagemStatus = "";
     let mensagemDicas = "";
@@ -328,18 +341,18 @@ function realizarAvaliacaoSaude(medicao) {
     }
 
     if (medicao.statusEvolucao === "descida") {
-        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Alerta Clínico:</b> O mwanene desceu na montanha! (${p}kg / ${a}cm aos ${medicao.idade}).</span>`;
-        mensagemDicas = "Mamã, reforça a papinha enriquecida com amendoim, peixe ou ovo e leva ao Centro de Saúde para rastreio.";
+        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Alerta Clínico:</b> O(A) ${nomeCrianca} desceu na montanha! (${p}kg / ${a}cm aos ${medicao.idade}).</span>`;
+        mensagemDicas = `Mamã, reforça a papinha do(a) ${nomeCrianca} enriquecida com amendoim, peixe ou ovo e leva ao Centro de Saúde para rastreio.`;
     } else if (estadoMuac.includes("Desnutrição")) {
-        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Atenção do Nutricionista:</b> Braço de ${muac}cm indica risco nutricional.</span>`;
+        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Atenção do Nutricionista:</b> Braço de ${muac}cm indica risco nutricional para o(a) ${nomeCrianca}.</span>`;
         mensagemDicas = "Visita a consulta de Nutrição no Centro de Saúde para receber o acompanhamento adequado.";
     } else {
-        mensagemStatus = `✅ <span style='color:#27ae60;'><b>Desenvolvimento Adequado:</b> O mwanene está com ${p}kg e ${a}cm na régua aos ${medicao.idade}.</span>`;
-        mensagemDicas = "Muito bem, mamã! Mantém a alimentação variada e vacinas em dia para o mwanene continuar a subir a montanha!";
+        mensagemStatus = `✅ <span style='color:#27ae60;'><b>Desenvolvimento Adequado:</b> O(A) ${nomeCrianca} está com ${p}kg e ${a}cm na régua aos ${medicao.idade}.</span>`;
+        mensagemDicas = `Muito bem, mamã! Mantém a alimentação variada e vacinas em dia para o(a) ${nomeCrianca} continuar a subir a montanha!`;
     }
 
-    status.innerHTML = mensagemStatus;
-    dicas.innerHTML = mensagemDicas;
+    if (status) status.innerHTML = mensagemStatus;
+    if (dicas) dicas.innerHTML = mensagemDicas;
 }
 
 function atualizarHistorico() {
@@ -363,14 +376,16 @@ function limparCampos() {
     document.getElementById("altura").value = "";
     document.getElementById("braco").value = "";
     if (document.getElementById("cranio")) document.getElementById("cranio").value = "";
+    preencherIdadeAutomatica();
 }
 
 async function baixarPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
+    const nomeCrianca = obterNomeBebe();
 
     doc.setFontSize(16);
-    doc.text("Relatório de Avaliação Nutricional do Mwanene - VIDAFONTE", 20, 20);
+    doc.text(`Relatório de Avaliação Nutricional - ${nomeCrianca}`, 20, 20);
     doc.setFontSize(11);
 
     let y = 40;
@@ -379,5 +394,5 @@ async function baixarPDF() {
         y += 10;
     });
 
-    doc.save("relatorio_saude_mwanene_vidafonte.pdf");
+    doc.save(`relatorio_saude_${nomeCrianca.toLowerCase().replace(/\s+/g, '_')}.pdf`);
 }
