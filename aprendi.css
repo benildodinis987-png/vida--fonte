@@ -1,10 +1,36 @@
+/* ========================================
+   RESET E CONFIGURAÇÕES GERAIS
+======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
 body {
     font-family: Arial, sans-serif;
     background: #f3f4f6;
-    margin: 0;
 }
 
+/* Todas as imagens adaptam-se ao espaço disponível */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ========================================
+   CONTAINER PRINCIPAL
+======================================== */
+
 .container {
+    width: calc(100% - 40px);
     max-width: 1200px;
     margin: 40px auto;
     background: #2f4356;
@@ -14,12 +40,17 @@ body {
 }
 
 header h1 {
-    margin-bottom: 20px;
+    margin: 0 0 20px;
 }
+
+/* ========================================
+   BARRA DE PESQUISA
+======================================== */
 
 .search-bar {
     display: flex;
     align-items: center;
+    gap: 10px;
     background: white;
     border-radius: 10px;
     padding: 10px;
@@ -27,10 +58,12 @@ header h1 {
 }
 
 .search-bar input {
+    min-width: 0;
     border: none;
     flex: 1;
     padding: 10px;
     outline: none;
+    font-size: 16px;
 }
 
 .search-bar button {
@@ -40,10 +73,21 @@ header h1 {
     padding: 10px 15px;
     border-radius: 8px;
     cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   FILTROS
+======================================== */
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .filters button {
-    margin-right: 10px;
+    margin: 0;
     padding: 8px 14px;
     border-radius: 20px;
     border: none;
@@ -55,10 +99,15 @@ header h1 {
     color: white;
 }
 
+/* ========================================
+   CONTEÚDO PRINCIPAL
+======================================== */
+
 main {
     display: flex;
     gap: 30px;
     margin-top: 30px;
+    width: 100%;
 }
 
 .tutorial-card {
@@ -67,6 +116,7 @@ main {
     border-radius: 15px;
     overflow: hidden;
     width: 45%;
+    min-width: 0;
 }
 
 .video {
@@ -75,6 +125,7 @@ main {
 
 .video img {
     width: 100%;
+    display: block;
 }
 
 .play {
@@ -100,18 +151,33 @@ main {
     cursor: pointer;
 }
 
+/* ========================================
+   INFORMAÇÕES LATERAIS
+======================================== */
+
 .side-info {
     width: 55%;
+    min-width: 0;
 }
 
 .icons-info div {
     margin-top: 10px;
 }
 
+/* ========================================
+   MINI CARTÕES
+======================================== */
+
 .mini-cards {
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
     margin-top: 20px;
+}
+
+.mini-card {
+    flex: 1;
+    min-width: 180px;
 }
 
 .mini-card img {
@@ -121,14 +187,21 @@ main {
     border-radius: 10px;
 }
 
+/* ========================================
+   TÓPICOS
+======================================== */
+
 .topics {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
     margin-top: 40px;
 }
 
 .topic {
     text-align: center;
+    flex: 1;
+    min-width: 120px;
 }
 
 .topic img {
@@ -136,4 +209,121 @@ main {
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media screen and (max-width: 900px) {
+
+    .container {
+        width: calc(100% - 30px);
+        margin: 20px auto;
+        padding: 25px;
+    }
+
+    main {
+        gap: 20px;
+    }
+}
+
+/* ========================================
+   TELEFONES
+======================================== */
+
+@media screen and (max-width: 768px) {
+
+    .container {
+        width: calc(100% - 20px);
+        margin: 10px auto;
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    /* Barra de pesquisa adapta-se */
+    .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-bar button {
+        width: 100%;
+    }
+
+    /* Conteúdo principal fica vertical */
+    main {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .tutorial-card,
+    .side-info {
+        width: 100%;
+    }
+
+    .tutorial-content {
+        padding: 15px;
+    }
+
+    /* Mini cartões */
+    .mini-cards {
+        flex-direction: column;
+    }
+
+    .mini-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Tópicos */
+    .topics {
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .topic {
+        flex: 0 1 100px;
+        min-width: 90px;
+    }
+}
+
+/* ========================================
+   TELEFONES MUITO PEQUENOS
+======================================== */
+
+@media screen and (max-width: 400px) {
+
+    .container {
+        width: 100%;
+        margin: 0;
+        padding: 15px;
+        border-radius: 0;
+    }
+
+    header h1 {
+        font-size: 21px;
+    }
+
+    .search-bar {
+        padding: 8px;
+    }
+
+    .filters button {
+        width: 100%;
+    }
+
+    .topics {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .topic {
+        min-width: 0;
+    }
 }
