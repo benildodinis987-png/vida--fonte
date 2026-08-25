@@ -11,7 +11,7 @@ window.onload = function() {
     }
 };
 
-// Calcula a idade exata em meses comparando com a data de nascimento
+// Calcula a idade em meses
 function calcularIdadeEmMeses(dataMedicao, dataNasc) {
     const inicio = new Date(dataNasc);
     const fim = new Date(dataMedicao);
@@ -45,7 +45,6 @@ function registrarMedicao() {
     
     let statusEvolucao = "progresso";
 
-    // Verifica se os valores são inferiores aos anteriores (Descida / Alerta)
     if (medicoes.length > 0) {
         const ultima = medicoes[medicoes.length - 1];
         if (peso < ultima.peso || altura < ultima.altura) {
@@ -73,57 +72,75 @@ function registrarMedicao() {
     limparCampos();
 }
 
-// Renderiza a caminhada com descida e alteração de cor para vermelho
+// Renderiza a montanha, parque de diversões, régua e o bebé caminhando com braços
 function renderizarCaminhadaEvolutiva() {
     const containerGrafico = document.getElementById("grafico");
     
     if (medicoes.length === 0) {
-        containerGrafico.innerHTML = "<p style='text-align:center; padding: 25px; color: #666;'>Mamã, regista a primeira medição para ver o mwanene a subir!</p>";
+        containerGrafico.innerHTML = "<p style='text-align:center; padding: 25px; color: #666;'>Mamã, regista a primeira medição para ver o mwanene a subir a montanha!</p>";
         return;
     }
 
     const ultimaMedicao = medicoes[medicoes.length - 1];
     const totalMedicoes = medicoes.length;
     
-    // Se houve descida nos valores, a cor muda para VERMELHO
     const ehDescida = ultimaMedicao.statusEvolucao === "descida";
-    const corCaminho = ehDescida ? "#e53e3e" : "#27ae60";
+    const corMontanha = ehDescida ? "#e53e3e" : "#22c55e";
 
-    // Cálculo do progresso no gráfico
-    let progressoX = Math.min((totalMedicoes - 1) * 12, 75);
-    let progressoY = Math.min((totalMedicoes - 1) * 10, 70); 
+    // Cálculo da Posição na Régua / Montanha (0 a 100 cm/pontos)
+    // Usa a altura em cm se disponível, ou o índice de medições
+    let valorCm = Math.min(Math.max(ultimaMedicao.altura || (totalMedicoes * 10), 30), 120);
+    
+    // Mapeamento percentual (30cm = 5% da largura, 120cm = 85% da largura)
+    let percentualX = Math.min(Math.max(((valorCm - 30) / 90) * 80 + 5, 5), 82);
+    let percentualY = Math.min((percentualX * 0.75), 65); // Altura na montanha
 
-    // Ajuste em caso de descida de peso/altura
-    if (ehDescida && totalMedicoes > 1) {
-        progressoY = Math.max(0, progressoY - 15); // Faz o boneco descer visualmente
+    if (ehDescida) {
+        percentualY = Math.max(5, percentualY - 12);
     }
 
-    const escala = Math.min(1 + (ultimaMedicao.mesesIdade * 0.015), 1.35);
+    // Gerar números e marcas da régua na base (de 30 cm a 120 cm)
+    let tracosRegua = "";
+    for (let cm = 30; cm <= 120; cm += 10) {
+        let posX = ((cm - 30) / 90) * 80 + 5;
+        tracosRegua += `
+            <div style="position: absolute; left: ${posX}%; bottom: 0; display: flex; flex-direction: column; align-items: center;">
+                <span style="font-size: 9px; font-weight: bold; color: #1e293b; background: rgba(255,255,255,0.8); padding: 1px 3px; border-radius: 3px;">${cm}cm</span>
+                <div style="width: 2px; height: 10px; background: #1e293b; margin-top: 2px;"></div>
+            </div>
+        `;
+    }
 
     let html = `
         <style>
-            @keyframes animPerna { 0%, 100% { transform: rotate(-15deg); } 50% { transform: rotate(15deg); } }
-            @keyframes subidaCorpo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-4px); } }
+            /* Animação de Caminhada Realista (Pernas e Braços) */
+            @keyframes animPernaEsq { 0%, 100% { transform: rotate(-25deg); } 50% { transform: rotate(25deg); } }
+            @keyframes animPernaDir { 0%, 100% { transform: rotate(25deg); } 50% { transform: rotate(-25deg); } }
+            @keyframes animBracoEsq { 0%, 100% { transform: rotate(30deg); } 50% { transform: rotate(-30deg); } }
+            @keyframes animBracoDir { 0%, 100% { transform: rotate(-30deg); } 50% { transform: rotate(30deg); } }
+            @keyframes balancoCorpo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
             
-            .perna-esq { animation: animPerna 0.6s infinite ease-in-out; transform-origin: 42px 105px; }
-            .perna-dir { animation: animPerna 0.6s infinite ease-in-out reverse; transform-origin: 58px 105px; }
-            .corpo-bebe-subindo { animation: subidaCorpo 0.4s infinite ease-in-out; cursor: pointer; }
-            
+            .perna-esq { animation: animPernaEsq 0.5s infinite ease-in-out; transform-origin: 45px 85px; }
+            .perna-dir { animation: animPernaDir 0.5s infinite ease-in-out; transform-origin: 55px 85px; }
+            .braco-esq { animation: animBracoEsq 0.5s infinite ease-in-out; transform-origin: 35px 50px; }
+            .braco-dir { animation: animBracoDir 0.5s infinite ease-in-out; transform-origin: 65px 50px; }
+            .corpo-bebe-caminhando { animation: balancoCorpo 0.5s infinite ease-in-out; cursor: pointer; }
+
             .balao-fala {
                 display: none;
                 position: absolute;
-                bottom: 115px;
+                bottom: 110px;
                 background: #ffffff;
-                border: 2px solid ${corCaminho};
+                border: 2px solid ${corMontanha};
                 border-radius: 12px;
                 padding: 8px 12px;
                 font-size: 11px;
                 font-weight: bold;
                 color: #1e293b;
-                box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-                width: 200px;
+                box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+                width: 190px;
                 text-align: center;
-                z-index: 10;
+                z-index: 20;
             }
             .balao-fala::after {
                 content: '';
@@ -139,80 +156,112 @@ function renderizarCaminhadaEvolutiva() {
             }
         </style>
 
-        <div style="position: relative; padding: 20px 10px; background: #f8fafc; border-radius: 12px; overflow: hidden; min-height: 260px;">
+        <div style="position: relative; width: 100%; height: 280px; background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 60%, #fef08a 100%); border-radius: 16px; overflow: hidden; border: 2px solid #93c5fd;">
             
-            <p style="text-align:center; font-size:11px; color:#64748b; margin-top:0;">
-                💡 <i>Toca no mwanene para ouvir a voz dele, mamã!</i>
+            <!-- PARQUE DE DIVERSÕES AO FUNDO -->
+            <svg viewBox="0 0 500 200" style="position: absolute; top: 10px; left: 0; width: 100%; height: 160px; opacity: 0.5;">
+                <!-- Roda Gigante -->
+                <circle cx="80" cy="80" r="45" stroke="#f43f5e" stroke-width="3" fill="none" stroke-dasharray="4,4" />
+                <line x1="80" y1="80" x2="80" y2="135" stroke="#64748b" stroke-width="4" />
+                <line x1="80" y1="80" x2="50" y2="135" stroke="#64748b" stroke-width="3" />
+                <line x1="80" y1="80" x2="110" y2="135" stroke="#64748b" stroke-width="3" />
+                <circle cx="80" cy="35" r="5" fill="#eab308" />
+                <circle cx="125" cy="80" r="5" fill="#3b82f6" />
+                <circle cx="35" cy="80" r="5" fill="#10b981" />
+                
+                <!-- Castelo do Parque -->
+                <path d="M 320 135 L 320 70 L 340 50 L 360 70 L 360 135 Z" fill="#a855f7" />
+                <path d="M 360 135 L 360 90 L 375 75 L 390 90 L 390 135 Z" fill="#ec4899" />
+                <rect x="333" y="90" width="14" height="25" fill="#fef08a" rx="7" />
+                
+                <!-- Circo / Carrossel -->
+                <polygon points="200,135 230,80 260,135" fill="#ef4444" />
+                <polygon points="215,135 230,80 245,135" fill="#ffffff" />
+
+                <!-- Balões no céu -->
+                <circle cx="430" cy="40" r="10" fill="#f43f5e" />
+                <line x1="430" y1="50" x2="425" y2="75" stroke="#94a3b8" />
+                <circle cx="450" cy="55" r="8" fill="#06b6d4" />
+                <line x1="450" y1="63" x2="447" y2="85" stroke="#94a3b8" />
+            </svg>
+
+            <p style="position: absolute; top: 6px; width: 100%; text-align:center; font-size:11px; font-weight:bold; color:#0369a1; z-index: 5;">
+                🎪 Parque de Diversões: Mwanene Subindo a Montanha! (Toca nele para falar) 🎡
             </p>
 
-            <!-- Rampa do Gráfico -->
-            <div style="
-                position: absolute; 
-                bottom: 40px; 
-                left: 5%; 
-                width: 85%; 
-                height: 10px; 
-                background: #cbd5e1; 
-                border-radius: 6px; 
-                transform: rotate(-10deg); 
-                transform-origin: left bottom;
-            ">
-                <div style="
-                    position: absolute; 
-                    left: 0; 
-                    top: 0; 
-                    height: 100%; 
-                    width: ${progressoX + 15}%; 
-                    background: ${corCaminho}; 
-                    border-radius: 6px; 
-                    transition: all 0.6s ease;
-                "></div>
-            </div>
+            <!-- MONTANHA VERDE/VERMELHA (RAMPA DE CRESCIMENTO) -->
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position: absolute; bottom: 25px; left: 0; width: 100%; height: 180px; z-index: 2;">
+                <path d="M 0 100 L 0 90 Q 50 65 100 25 L 100 100 Z" fill="${corMontanha}" opacity="0.85" />
+                <path d="M 0 90 Q 50 65 100 25" stroke="#ffffff" stroke-width="2" stroke-dasharray="3,3" fill="none" />
+            </svg>
 
-            <!-- Contentor do Bebé -->
+            <!-- BONECO DO BEBÉ (COM BRAÇOS E PERNAS ANIMADOS) -->
             <div style="
                 position: absolute; 
-                bottom: calc(45px + ${progressoY}px); 
-                left: calc(5% + ${progressoX}%); 
-                transition: all 0.6s ease;
+                bottom: calc(30px + ${percentualY}%); 
+                left: ${percentualX}%; 
+                transition: all 1s ease-in-out;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                transform: scale(${escala});
-                transform-origin: bottom center;
+                z-index: 10;
             ">
                 <div id="balaoFala" class="balao-fala"></div>
 
-                <div class="corpo-bebe-subindo" onclick="falarBebeBrincalhao()" style="width: 65px; height: 95px;">
-                    <svg viewBox="0 0 100 150" width="100%" height="100%">
-                        <g transform="rotate(-10, 50, 30)">
-                            <circle cx="50" cy="28" r="22" fill="#fca5a5" />
-                            <circle cx="30" cy="30" r="4" fill="#fca5a5" />
-                            <path d="M 33 18 Q 50 6 67 18 Q 50 13 33 18 Z" fill="#78350f" />
-                            <circle cx="60" cy="24" r="2.5" fill="#1e293b" />
-                            <path d="M 54 34 Q 60 38 65 32" stroke="#1e293b" stroke-width="2" fill="none" />
-                        </g>
+                <div class="corpo-bebe-caminhando" onclick="falarBebeBrincalhao()" style="width: 70px; height: 95px;">
+                    <svg viewBox="0 0 100 130" width="100%" height="100%">
                         
-                        <path d="M 32 52 L 68 48 L 64 90 L 36 90 Z" fill="#38bdf8" />
-                        <path d="M 35 90 L 65 90 L 65 105 L 35 105 Z" fill="#1e3a8a" />
-
-                        <g class="perna-esq">
-                            <rect x="38" y="105" width="8" height="30" rx="4" fill="#fca5a5" />
-                            <ellipse cx="46" cy="135" rx="8" ry="4" fill="#2563eb" />
+                        <!-- Braço Esquerdo (Fundo) -->
+                        <g class="braco-esq">
+                            <rect x="25" y="48" width="10" height="28" rx="5" fill="#fca5a5" />
+                            <circle cx="30" cy="78" r="5" fill="#fca5a5" />
                         </g>
 
+                        <!-- Perna Esquerda (Fundo) -->
+                        <g class="perna-esq">
+                            <rect x="40" y="80" width="10" height="32" rx="5" fill="#fca5a5" />
+                            <ellipse cx="45" cy="114" rx="8" ry="4" fill="#2563eb" />
+                        </g>
+
+                        <!-- Tronco / Roupinha -->
+                        <path d="M 36 45 L 64 45 L 60 82 L 40 82 Z" fill="#0284c7" />
+                        <!-- Calções -->
+                        <path d="M 38 80 L 62 80 L 62 92 L 38 92 Z" fill="#1e3a8a" />
+
+                        <!-- Perna Direita (Frente) -->
                         <g class="perna-dir">
-                            <rect x="54" y="105" width="8" height="30" rx="4" fill="#fca5a5" />
-                            <ellipse cx="62" cy="135" rx="8" ry="4" fill="#2563eb" />
+                            <rect x="50" y="80" width="10" height="32" rx="5" fill="#fca5a5" />
+                            <ellipse cx="55" cy="114" rx="8" ry="4" fill="#2563eb" />
+                        </g>
+
+                        <!-- Braço Direito (Frente) -->
+                        <g class="braco-dir">
+                            <rect x="65" y="48" width="10" height="28" rx="5" fill="#fca5a5" />
+                            <circle cx="70" cy="78" r="5" fill="#fca5a5" />
+                        </g>
+
+                        <!-- Cabeça e Rosto -->
+                        <g transform="rotate(-5, 50, 25)">
+                            <circle cx="50" cy="26" r="21" fill="#fca5a5" />
+                            <!-- Cabelo -->
+                            <path d="M 34 16 Q 50 4 66 16 Q 50 11 34 16 Z" fill="#78350f" />
+                            <!-- Olho -->
+                            <circle cx="58" cy="22" r="3" fill="#1e293b" />
+                            <circle cx="59" cy="21" r="1" fill="#ffffff" />
+                            <!-- Bochecha -->
+                            <circle cx="58" cy="30" r="3.5" fill="#f43f5e" opacity="0.5" />
+                            <!-- Sorriso -->
+                            <path d="M 52 31 Q 58 37 63 30" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round" />
                         </g>
                     </svg>
                 </div>
             </div>
 
-            <div style="position: absolute; bottom: 5px; width: 90%; display: flex; justify-content: space-between; font-size: 11px; color: #64748b; padding: 0 10px;">
-                <span>Início: ${medicoes[0].data}</span>
-                <span>Última: ${ultimaMedicao.data} (${ultimaMedicao.peso}kg)</span>
+            <!-- RÉGUA DE MEDIÇÃO NA BASE (COM NÚMEROS E MARCAÇÕES EM CM) -->
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 26px; background: #f1f5f9; border-top: 2px solid #64748b; z-index: 4;">
+                ${tracosRegua}
             </div>
+
         </div>
     `;
 
@@ -228,11 +277,11 @@ function falarBebeBrincalhao() {
     let textoFala = "";
 
     if (ult.statusEvolucao === "descida") {
-        textoFala = "Mamã! O mwanene escorregou na rampa, hiya! Dá-me papinha gostosa de peixinho para eu subir de novo, tá?";
-    } else if (ult.peso < 10) {
-        textoFala = "Atchim! Mamã, olha eu a subir bem rápido! Daqui a nada vou te apanhar no quintal, eish!";
+        textoFala = "Mamã! O mwanene escorregou na montanha, hiya! Dá-me papinha gostosa para eu subir até ao topo do parque!";
+    } else if (ult.altura && ult.altura > 80) {
+        textoFala = `Ehei! Já estou com ${ult.altura} cm na régua! Daqui a nada chego no topo da Roda-Gigante, mamã!`;
     } else {
-        textoFala = "Ehei! O mwanene está a ficar forte tipo leão! Hoje vou comer toda a papinha, tá mamã?";
+        textoFala = "Olha eu a caminhar na régua! O mwanene está a ficar forte tipo leão! Vamos brincar no parque, mamã?";
     }
 
     if (balao) {
@@ -241,32 +290,29 @@ function falarBebeBrincalhao() {
         setTimeout(() => { balao.style.display = "none"; }, 6000);
     }
 
-    // Configuração de voz humana e suave (Evita som robótico)
+    // Configuração de voz amigável
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         
         const fala = new SpeechSynthesisUtterance(textoFala);
-        
-        // Procura por vozes em português com timbre mais natural
         const voces = window.speechSynthesis.getVoices();
         const vozPt = voces.find(v => v.lang.includes('pt') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Luciana') || v.name.includes('Joana'))) || voces.find(v => v.lang.includes('pt'));
         
         if (vozPt) fala.voice = vozPt;
         
         fala.lang = 'pt-PT';
-        fala.pitch = 1.35; // Ligeiramente agudo mas sem soar a robô artificial
-        fala.rate = 0.95;  // Ritmo natural e descontraído
+        fala.pitch = 1.3; 
+        fala.rate = 0.95; 
         
         window.speechSynthesis.speak(fala);
     }
 }
 
-// Auto-Avaliação de Profissional de Saúde
+// Auto-Avaliação Profissional de Saúde
 function realizarAvaliacaoSaude(medicao) {
     const status = document.getElementById("status");
     const dicas = document.getElementById("dicas");
 
-    const m = medicao.mesesIdade;
     const p = medicao.peso;
     const a = medicao.altura;
     const muac = medicao.braco;
@@ -274,7 +320,6 @@ function realizarAvaliacaoSaude(medicao) {
     let mensagemStatus = "";
     let mensagemDicas = "";
 
-    // Validação da Nutrição pelo Perímetro Braquial (MUAC - Padrão OMS)
     let estadoMuac = "Normal";
     if (muac < 11.5) {
         estadoMuac = "Desnutrição Aguda Grave (Vermelho)";
@@ -282,16 +327,15 @@ function realizarAvaliacaoSaude(medicao) {
         estadoMuac = "Desnutrição Aguda Moderada (Amarelo)";
     }
 
-    // Avaliação de Crescimento por Idade e Peso
     if (medicao.statusEvolucao === "descida") {
-        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Alerta Clínico:</b> O mwanene teve uma redução nos valores! (${p}kg / ${a}cm aos ${medicao.idade}).</span>`;
-        mensagemDicas = "Mamã, quando o bebé perde peso é importante reforçar a alimentação com moringa, peixe, ovelha ou feijão e levar ao Centro de Saúde para rastreio de febre ou diarreia.";
+        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Alerta Clínico:</b> O mwanene desceu na montanha! (${p}kg / ${a}cm aos ${medicao.idade}).</span>`;
+        mensagemDicas = "Mamã, reforça a papinha enriquecida com amendoim, peixe ou ovo e leva ao Centro de Saúde para rastreio.";
     } else if (estadoMuac.includes("Desnutrição")) {
-        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Atenção do Nutricionista:</b> Perímetro do braço de ${muac}cm indica risco de desnutrição.</span>`;
-        mensagemDicas = "Visite a consulta de Pediatria/CCR no Centro de Saúde para receber suplementação de Plumpy'Nut ou papa enriquecida.";
+        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Atenção do Nutricionista:</b> Braço de ${muac}cm indica risco nutricional.</span>`;
+        mensagemDicas = "Visita a consulta de Nutrição no Centro de Saúde para receber o acompanhamento adequado.";
     } else {
-        mensagemStatus = `✅ <span style='color:#27ae60;'><b>Desenvolvimento Adequado:</b> O mwanene está com ${p}kg e ${a}cm aos ${medicao.idade}. Evolução saudável!</span>`;
-        mensagemDicas = "Excelente trabalho, mamã! Continua com o aleitamento/comida diversificada, vacinas do PAF em dia e água fervida/tratada com Certeza.";
+        mensagemStatus = `✅ <span style='color:#27ae60;'><b>Desenvolvimento Adequado:</b> O mwanene está com ${p}kg e ${a}cm na régua aos ${medicao.idade}.</span>`;
+        mensagemDicas = "Muito bem, mamã! Mantém a alimentação variada e vacinas em dia para o mwanene continuar a subir a montanha!";
     }
 
     status.innerHTML = mensagemStatus;
