@@ -1,31 +1,49 @@
-// Carrega dados salvos no navegador (localStorage)
-let medicoes = JSON.parse(localStorage.getItem("medicoes")) || [];
-let dadosBebe = JSON.parse(localStorage.getItem("dadosBebe")) || { nome: "Mwanene", dataNascimento: "2024-01-01" };
+/* ==========================================================================
+   SISTEMA DE MONITORAMENTO INFANTIL - VIDAFONTE (testann.js)
+   ========================================================================== */
 
+// 1. OBTENÇÃO INTELIGENTE DOS DADOS DO CADASTRO (dadosBebe ou usuario)
+function obterDadosCadastrados() {
+    let dados = JSON.parse(localStorage.getItem("dadosBebe"));
+    
+    if (!dados) {
+        dados = JSON.parse(localStorage.getItem("usuario"));
+    }
+
+    return {
+        nome: (dados && dados.nome) ? dados.nome : "Mwanene",
+        dataNascimento: (dados && dados.dataNascimento) ? dados.dataNascimento : "2024-01-01"
+    };
+}
+
+let medicoes = JSON.parse(localStorage.getItem("medicoes")) || [];
+let dadosBebe = obterDadosCadastrados();
+
+// 2. INICIALIZAÇÃO DA PÁGINA
 window.onload = function() {
     renderizarCaminhadaEvolutiva();
     atualizarHistorico();
-    preencherIdadeAutomatica();
+    preencherCamposAutomaticos();
 
     if (medicoes.length > 0) {
         const ult = medicoes[medicoes.length - 1];
         realizarAvaliacaoSaude(ult);
     }
 
-    // Ouve a alteração do campo de data para calcular idade automaticamente
+    // Escuta mudanças no campo de data para recalcular idade em tempo real
     const campoData = document.getElementById("data");
     if (campoData) {
-        campoData.addEventListener("change", preencherIdadeAutomatica);
+        campoData.addEventListener("change", preencherCamposAutomaticos);
     }
 };
 
-// Obter nome do bebé registado no cadastro
-function obterNomeBebe() {
-    return dadosBebe && dadosBebe.nome ? dadosBebe.nome : "Mwanene";
-}
+// 3. PREENCHIMENTO AUTOMÁTICO DE NOME E IDADE
+function preencherCamposAutomaticos() {
+    const campoNome = document.getElementById("nome") || document.getElementById("nome-bebe");
+    if (campoNome) {
+        campoNome.value = dadosBebe.nome;
+    }
 
-// Preenche o campo de idade automaticamente no formulário
-function preencherIdadeAutomatica() {
     const campoData = document.getElementById("data");
     const campoIdade = document.getElementById("idade");
 
@@ -38,7 +56,7 @@ function preencherIdadeAutomatica() {
     }
 }
 
-// Calcula a idade em meses comparando a data da medição com a data de nascimento
+// 4. CÁLCULO E FORMATAGÃO DE IDADE
 function calcularIdadeEmMeses(dataMedicao, dataNasc) {
     if (!dataNasc) return 0;
     const inicio = new Date(dataNasc);
@@ -56,14 +74,15 @@ function formatarIdade(meses) {
     return `${anos}a ${sob}m`;
 }
 
+// 5. REGISTO DE MEDIÇÕES
 function registrarMedicao() {
-    const data = document.getElementById("data").value;
-    const peso = parseFloat(document.getElementById("peso").value);
-    const altura = parseFloat(document.getElementById("altura").value);
-    const braco = parseFloat(document.getElementById("braco").value);
+    const data = document.getElementById("data") ? document.getElementById("data").value : "";
+    const peso = parseFloat(document.getElementById("peso") ? document.getElementById("peso").value : 0);
+    const altura = parseFloat(document.getElementById("altura") ? document.getElementById("altura").value : 0);
+    const braco = parseFloat(document.getElementById("braco") ? document.getElementById("braco").value : 0);
     const cranio = parseFloat(document.getElementById("cranio")?.value || 0);
 
-    const nomeCrianca = obterNomeBebe();
+    const nomeCrianca = dadosBebe.nome;
 
     if (!data || isNaN(peso) || isNaN(altura) || isNaN(braco)) {
         alert(`Eish, mamã! Preenche a data, peso, altura e braço do(a) ${nomeCrianca} direitinho, tá bom?`);
@@ -102,10 +121,12 @@ function registrarMedicao() {
     limparCampos();
 }
 
-// Renderiza a caminhada na montanha e régua
+// 6. RENDERIZAÇÃO DO GRÁFICO (MONTANHA, PARQUE, BEBÉ E RÉGUA EM CM)
 function renderizarCaminhadaEvolutiva() {
     const containerGrafico = document.getElementById("grafico");
-    const nomeCrianca = obterNomeBebe();
+    const nomeCrianca = dadosBebe.nome;
+
+    if (!containerGrafico) return;
 
     if (medicoes.length === 0) {
         containerGrafico.innerHTML = `<p style='text-align:center; padding: 25px; color: #666;'>Mamã, regista a primeira medição para ver o(a) ${nomeCrianca} a subir a montanha!</p>`;
@@ -118,7 +139,7 @@ function renderizarCaminhadaEvolutiva() {
     const ehDescida = ultimaMedicao.statusEvolucao === "descida";
     const corMontanha = ehDescida ? "#e53e3e" : "#22c55e";
 
-    // Posição na Régua / Montanha
+    // Posição proporcional na régua (30cm a 120cm)
     let valorCm = Math.min(Math.max(ultimaMedicao.altura || (totalMedicoes * 10), 30), 120);
     let percentualX = Math.min(Math.max(((valorCm - 30) / 90) * 80 + 5, 5), 82);
     let percentualY = Math.min((percentualX * 0.75), 65);
@@ -127,7 +148,7 @@ function renderizarCaminhadaEvolutiva() {
         percentualY = Math.max(5, percentualY - 12);
     }
 
-    // Marcações da régua em cm
+    // Gerar a régua numerada em CM
     let tracosRegua = "";
     for (let cm = 30; cm <= 120; cm += 10) {
         let posX = ((cm - 30) / 90) * 80 + 5;
@@ -185,7 +206,7 @@ function renderizarCaminhadaEvolutiva() {
 
         <div style="position: relative; width: 100%; height: 280px; background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 60%, #fef08a 100%); border-radius: 16px; overflow: hidden; border: 2px solid #93c5fd;">
             
-            <!-- PARQUE DE DIVERSÕES AO FUNDO -->
+            <!-- CENÁRIO: PARQUE DE DIVERSÕES -->
             <svg viewBox="0 0 500 200" style="position: absolute; top: 10px; left: 0; width: 100%; height: 160px; opacity: 0.5;">
                 <circle cx="80" cy="80" r="45" stroke="#f43f5e" stroke-width="3" fill="none" stroke-dasharray="4,4" />
                 <line x1="80" y1="80" x2="80" y2="135" stroke="#64748b" stroke-width="4" />
@@ -208,7 +229,7 @@ function renderizarCaminhadaEvolutiva() {
                 <line x1="450" y1="63" x2="447" y2="85" stroke="#94a3b8" />
             </svg>
 
-            <!-- MENSAGEM DO GRÁFICO ALTERADA -->
+            <!-- TITULO DO GRÁFICO -->
             <p style="position: absolute; top: 6px; width: 100%; text-align:center; font-size:12px; font-weight:bold; color:#0369a1; z-index: 5;">
                 me toca mae quero falar
             </p>
@@ -219,7 +240,7 @@ function renderizarCaminhadaEvolutiva() {
                 <path d="M 0 90 Q 50 65 100 25" stroke="#ffffff" stroke-width="2" stroke-dasharray="3,3" fill="none" />
             </svg>
 
-            <!-- BEBÉ -->
+            <!-- BONECO DO BEBÉ -->
             <div style="
                 position: absolute; 
                 bottom: calc(30px + ${percentualY}%); 
@@ -280,13 +301,13 @@ function renderizarCaminhadaEvolutiva() {
     containerGrafico.innerHTML = html;
 }
 
-// Fala do bebé com o nome vindo do cadastro
+// 7. SINTETIZAÇÃO DE VOZ E INTERAÇÃO
 function falarBebeBrincalhao() {
     if (medicoes.length === 0) return;
 
     const ult = medicoes[medicoes.length - 1];
     const balao = document.getElementById("balaoFala");
-    const nomeCrianca = obterNomeBebe();
+    const nomeCrianca = dadosBebe.nome;
     let textoFala = "";
 
     if (ult.statusEvolucao === "descida") {
@@ -320,7 +341,7 @@ function falarBebeBrincalhao() {
     }
 }
 
-// Avaliação de Saúde com Nome Personalizado
+// 8. AUTO-AVALIAÇÃO DE SAÚDE
 function realizarAvaliacaoSaude(medicao) {
     const status = document.getElementById("status");
     const dicas = document.getElementById("dicas");
@@ -328,7 +349,7 @@ function realizarAvaliacaoSaude(medicao) {
     const p = medicao.peso;
     const a = medicao.altura;
     const muac = medicao.braco;
-    const nomeCrianca = obterNomeBebe();
+    const nomeCrianca = dadosBebe.nome;
 
     let mensagemStatus = "";
     let mensagemDicas = "";
@@ -355,6 +376,7 @@ function realizarAvaliacaoSaude(medicao) {
     if (dicas) dicas.innerHTML = mensagemDicas;
 }
 
+// 9. ATUALIZAÇÃO DE HISTÓRICO
 function atualizarHistorico() {
     const lista = document.getElementById("historico");
     if (!lista) return;
@@ -370,19 +392,25 @@ function atualizarHistorico() {
     });
 }
 
+// 10. LIMPEZA DE CAMPOS DO FORMULÁRIO
 function limparCampos() {
-    document.getElementById("data").value = "";
-    document.getElementById("peso").value = "";
-    document.getElementById("altura").value = "";
-    document.getElementById("braco").value = "";
+    if (document.getElementById("data")) document.getElementById("data").value = "";
+    if (document.getElementById("peso")) document.getElementById("peso").value = "";
+    if (document.getElementById("altura")) document.getElementById("altura").value = "";
+    if (document.getElementById("braco")) document.getElementById("braco").value = "";
     if (document.getElementById("cranio")) document.getElementById("cranio").value = "";
-    preencherIdadeAutomatica();
+    preencherCamposAutomaticos();
 }
 
+// 11. GERAÇÃO DE RELATÓRIO PDF
 async function baixarPDF() {
+    if (!window.jspdf) {
+        alert("Biblioteca PDF a carregar. Tente novamente em instantes!");
+        return;
+    }
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    const nomeCrianca = obterNomeBebe();
+    const nomeCrianca = dadosBebe.nome;
 
     doc.setFontSize(16);
     doc.text(`Relatório de Avaliação Nutricional - ${nomeCrianca}`, 20, 20);
