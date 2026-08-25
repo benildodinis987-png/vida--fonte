@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIDAFONTE - Modo Cinema Claro</title>
+    <title>VIDAFONTE - Saúde Infantil e Nutrição</title>
 
     <style>
 :root {
@@ -37,7 +37,6 @@ body {
     min-height: 100vh;
 }
 
-
 /* ================================
    CONTAINER PRINCIPAL
 ================================ */
@@ -51,7 +50,6 @@ body {
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
-
 
 /* ================================
    CABEÇALHO
@@ -77,34 +75,12 @@ body {
     flex-shrink: 0;
 }
 
-.logo div {
-    min-width: 0;
-}
-
 .logo small {
     color: var(--sub-texto);
 }
 
-.points {
-    font-weight: bold;
-}
-
-.menu {
-    display: flex;
-    gap: 20px;
-    color: #777;
-}
-
-.btn5 {
-    border: none;
-    border-radius: 3px;
-    background: rgb(60, 60, 231);
-    cursor: pointer;
-}
-
-
 /* ================================
-   MENU
+   MENU DROPDOWN
 ================================ */
 
 .menu-container {
@@ -114,18 +90,14 @@ body {
     flex-shrink: 0;
 }
 
-.menu-icon {
-    font-size: 24px;
-    cursor: pointer;
-    padding: 10px;
-}
-
 .menu-btn {
     cursor: pointer;
     padding: 14px;
     border-radius: 10px;
     width: 100px;
     border: none;
+    background: #e2e8f0;
+    font-weight: 600;
 }
 
 .dropdown {
@@ -154,43 +126,47 @@ body {
     background: #f5f5f5;
 }
 
-.logout {
-    color: red;
-}
-
-
 /* ================================
-   BARRA DE NAVEGAÇÃO
+   BARRA DE PESQUISA
 ================================ */
 
-.navbar-cinema {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    padding: 16px 40px;
-    border-bottom: 1px solid var(--borda-suave);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-}
-
-.btn-voltar {
-    color: var(--texto);
-    text-decoration: none;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
+.search-bar-container {
+    display: flex;
     gap: 10px;
-    font-size: 14px;
-    letter-spacing: 0.5px;
-    transition: color 0.3s;
+    margin: 25px 0 15px 0;
+    width: 100%;
 }
 
-.btn-voltar:hover {
-    color: var(--accent);
+.search-bar-container input {
+    flex: 1;
+    padding: 12px 18px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    background: var(--bg-card);
+    transition: border-color 0.2s;
 }
 
+.search-bar-container input:focus {
+    border-color: var(--accent);
+    background: #fff;
+}
+
+.search-bar-container button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search-bar-container button:hover {
+    background: #1d4ed8;
+}
 
 /* ================================
    CONTEÚDO PRINCIPAL
@@ -200,11 +176,11 @@ body {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 50px 0 30px;
+    padding: 10px 0 30px;
 }
 
 .secao-player {
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     position: relative;
 }
 
@@ -221,16 +197,15 @@ body {
 #videoPrincipal {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    border: none;
 }
-
 
 /* ================================
    INFORMAÇÕES DO VÍDEO
 ================================ */
 
 .info-video-principal {
-    margin-top: 28px;
+    margin-top: 24px;
 }
 
 .tag-canal {
@@ -247,63 +222,25 @@ body {
 }
 
 h1#tituloVideo {
-    font-size: 28px;
+    font-size: 24px;
     margin: 0 0 16px;
     font-weight: 700;
     letter-spacing: -0.5px;
-}
-
-.meta-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--borda-suave);
 }
 
 .descricao-texto {
     color: var(--sub-texto);
     font-size: 15px;
     line-height: 1.6;
-    max-width: 800px;
-    margin-top: 20px;
+    margin-top: 15px;
 }
-
-.acoes-lista {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.btn-acao {
-    background: var(--bg-card);
-    border: 1px solid var(--borda-suave);
-    padding: 10px 20px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--texto);
-    transition: all 0.2s;
-}
-
-.btn-acao:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
-}
-
 
 /* ================================
    VITRINE DE VÍDEOS
 ================================ */
 
 .secao-vitrine {
-    margin-top: 60px;
+    margin-top: 40px;
 }
 
 .vitrine-topo {
@@ -317,13 +254,12 @@ h1#tituloVideo {
     font-size: 20px;
     font-weight: 700;
     margin: 0;
-    letter-spacing: -0.3px;
 }
 
 .grade-conteudo {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
-    gap: 28px;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    gap: 20px;
 }
 
 .card-streaming {
@@ -332,14 +268,12 @@ h1#tituloVideo {
     overflow: hidden;
     cursor: pointer;
     border: 1px solid var(--borda-suave);
-    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-color 0.3s;
+    transition: transform 0.3s, border-color 0.3s;
 }
 
 .card-streaming:hover {
-    transform: translateY(-6px);
-    border-color: rgba(37, 99, 235, 0.3);
-    box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
+    transform: translateY(-4px);
+    border-color: rgba(37, 99, 235, 0.4);
 }
 
 .preview-video-container {
@@ -350,19 +284,19 @@ h1#tituloVideo {
     overflow: hidden;
 }
 
-.preview-video-container video {
+.preview-video-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
 .detalhes-card {
-    padding: 20px;
+    padding: 15px;
 }
 
 .detalhes-card h4 {
     margin: 0 0 8px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     line-height: 1.4;
     color: var(--texto);
@@ -371,288 +305,189 @@ h1#tituloVideo {
 .detalhes-card .categoria-card {
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
     color: var(--accent);
     font-weight: 700;
     margin-bottom: 4px;
 }
 
-.detalhes-card p {
-    margin: 0;
-    font-size: 13px;
-    color: var(--sub-texto);
-}
-
-
 /* ================================
-   TABLETS
-================================ */
-
-@media (max-width: 768px) {
-    .container {
-        width: calc(100% - 30px);
-        padding: 20px;
-    }
-
-    .content-wrapper {
-        padding-top: 35px;
-    }
-
-    .grade-conteudo {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px;
-    }
-}
-
-
-/* ================================
-   TELEMÓVEIS
+   RESPONSIVIDADE
 ================================ */
 
 @media (max-width: 600px) {
     .container {
         width: calc(100% - 20px);
-        margin: 10px auto;
         padding: 15px;
-        border-radius: 15px;
     }
-
-    .header {
-        gap: 10px;
-    }
-
-    .logo img {
-        width: 40px;
-    }
-
-    .logo strong {
-        font-size: 15px;
-    }
-
-    .logo small {
-        font-size: 11px;
-    }
-
-    .menu-btn {
-        width: auto;
-        padding: 10px;
-        font-size: 13px;
-    }
-
-    .content-wrapper {
-        padding: 30px 0 20px;
-    }
-
-    .player-moldura {
-        border-radius: 15px;
-    }
-
-    h1#tituloVideo {
-        font-size: 23px;
-    }
-
-    .info-video-principal {
-        margin-top: 20px;
-    }
-
-    .acoes-lista {
-        width: 100%;
-    }
-
-    .btn-acao {
-        flex: 1;
-        justify-content: center;
-        padding: 10px;
-    }
-
-    .descricao-texto {
-        font-size: 14px;
-    }
-
-    .secao-vitrine {
-        margin-top: 40px;
-    }
-
     .grade-conteudo {
         grid-template-columns: 1fr;
-        gap: 18px;
     }
-
-    .detalhes-card {
-        padding: 15px;
-    }
-}
-
-
-/* ================================
-   ECRÃS MUITO PEQUENOS
-================================ */
-
-@media (max-width: 360px) {
-    .container {
-        padding: 10px;
-    }
-
-    .header {
-        align-items: flex-start;
-    }
-
-    .logo {
-        gap: 6px;
-    }
-
-    .logo img {
-        width: 35px;
-    }
-
-    .logo small {
-        font-size: 9px;
-    }
-
-    .menu-btn {
-        padding: 8px;
-        font-size: 11px;
-    }
-
-    h1#tituloVideo {
-        font-size: 20px;
-    }
-
-    .acoes-lista {
+    .search-bar-container {
         flex-direction: column;
     }
-
-    .btn-acao {
+    .search-bar-container button {
         width: 100%;
     }
-}    </style>
+}
+    </style>
 </head>
 
 <body>
- 
-    <DIV class="container">
-    <!--CABECA-->
-    
+
+    <div class="container">
         <!-- HEADER -->
         <div class="header">
             <div class="logo">
-                <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif">
+                <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif" alt="Logo">
                 <div>
                     <strong>VIDAFONTE</strong><br>
                     <small>A vida e a fonte de tudo que alimenta</small>
                 </div>
             </div>
 
-          
-
-           <div class="menu-container">
-    <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
-
-    <div class="dropdown" id="menu">
-        <a href="cooonver.html"> Assistente IA</a>
-        <a href="puto.html"> perfil</a>
-        <a href="difinicoes.html"> Definições</a>
-        <a href="acessibilidade.html"> Acessibilidade</a>
-        <a href="feedback.html"> Feedback</a>
-        <a href="Denuncia.html"> Denúncia</a>
-        <a href="sobree.html">ℹ Sobre</a>
-        <a href="Login 2.js.html"> Sair da Conta</a>
-    </div>
+            <div class="menu-container">
+                <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
+                <div class="dropdown" id="menu">
+                    <a href="cooonver.html"> Assistente IA</a>
+                    <a href="puto.html"> Perfil</a>
+                    <a href="difinicoes.html"> Definições</a>
+                    <a href="acessibilidade.html"> Acessibilidade</a>
+                    <a href="feedback.html"> Feedback</a>
+                    <a href="Denuncia.html"> Denúncia</a>
+                    <a href="sobree.html">ℹ Sobre</a>
+                    <a href="paginal.html"> Voltar </a>
+                </div>
             </div>
         </div>
 
-    <!-- Topbar com fundo claro -->
+        <!-- BARRA DE PESQUISA -->
+        <div class="search-bar-container">
+            <input type="text" id="campoPesquisa" placeholder="Pesquisar saúde, nutrição ou direitos das crianças...">
+            <button onclick="realizarPesquisa()">Buscar</button>
+        </div>
 
+        <!-- CONTEÚDO PRINCIPAL -->
+        <div class="content-wrapper">
+            
+            <!-- Zona do Player do YouTube -->
+            <section class="secao-player">
+                <div class="player-moldura">
+                    <iframe id="videoPrincipal" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
 
-    <div class="content-wrapper">
-        
-        <!-- Zona do Player -->
-        <section class="secao-player">
-            <div class="player-moldura">
-                <video id="videoPrincipal" controls autoplay></video>
-            </div>
+                <div class="info-video-principal">
+                    <span class="tag-canal">Saúde & Nutrição Infantil</span>
+                    <h1 id="tituloVideo">Carregando conteúdo...</h1>
+                    <p class="descricao-texto">
+                        Espaço dedicado ao bem-estar, direitos e alimentação saudável na infância. Conteúdo educacional fornecido pela comunidade e órgãos de saúde.
+                    </p>
+                </div>
+            </section>
 
-            <div class="info-video-principal">
-                <span class="tag-canal">Vidafonte Original</span>
-                <h1 id="tituloVideo">Carregando conteúdo...</h1>
-
-                <div class="meta-container">
-                    <div class="acoes-lista">
-                        <button class="btn-acao">✨ Recomendar</button>
-                        <button class="btn-acao">🔗 Copiar Ligação</button>
-                    </div>
+            <!-- Vitrine de Recomendações -->
+            <section class="secao-vitrine">
+                <div class="vitrine-topo">
+                    <h3 class="vitrine-titulo">Vídeos Relacionados</h3>
                 </div>
                 
-                <p class="descricao-texto">
-                    Espaço dedicado ao bem-estar e desenvolvimento coletivo. Vídeo integrado na plataforma de formação comunitária VIDAFONTE.
-                </p>
-            </div>
-        </section>
+                <div id="listaVideosLaterais" class="grade-conteudo">
+                    <!-- Vídeos do YouTube serão inseridos aqui dinamicamente -->
+                </div>
+            </section>
 
-        <!-- Vitrine Inferior de Sugestões -->
-        <section class="secao-vitrine">
-            <div class="vitrine-topo">
-                <h3 class="vitrine-titulo">Continuar a Assistir</h3>
-            </div>
-            
-            <div id="listaVideosLaterais" class="grade-conteudo"></div>
-        </section>
-
+        </div>
     </div>
-    </DIv>
-    
 
     <script>
-        // Captura os parâmetros enviados pela URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoAlvo = urlParams.get("video");
-        const tituloAlvo = urlParams.get("titulo");
+        // COLE SUA CHAVE DE API DO YOUTUBE AQUI ABAIXO:
+        const API_KEY = 'AIzaSyAIVenDhGIM1LxmKqV6yWnnQmt8FpguHSk'; 
 
-        const playerPrincipal = document.getElementById("videoPrincipal");
-        const areaTitulo = document.getElementById("tituloVideo");
+        // Contexto fixo para garantir que as pesquisas fiquem no tema do site
+        const CONTEXTO_BASE = 'saude infantil nutricao alimentacao saudavel direitos das criancas';
 
-        // Aplica o vídeo e título capturados
-        if (videoAlvo) {
-            playerPrincipal.src = videoAlvo;
-        }
-        if (tituloAlvo) {
-            areaTitulo.innerText = decodeURIComponent(tituloAlvo);
-            document.title = decodeURIComponent(tituloAlvo) + " - VIDAFONTE";
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
         }
 
-        // Catálogo de Mídias
-        const catalogo = [
-            { titulo: "Casos de Nutrição Infantil", video: "hospital.mp4" },
-            { titulo: "Como cuidar da tua família", video: "nut.mp4" },
-            { titulo: "Alimentação Segura", video: "unicef.mp4" }
-        ];
-
-        const containerVitrine = document.getElementById("listaVideosLaterais");
-
-        // Renderiza os cards modulares inferiores
-        catalogo.forEach(item => {
-            if (item.video !== videoAlvo) {
-                containerVitrine.innerHTML += `
-                    <div class="card-streaming" onclick="reproduzirOutro('${item.video}', '${item.titulo}')">
-                        <div class="preview-video-container">
-                            <video muted preload="metadata">
-                                <source src="${item.video}" type="video/mp4">
-                            </video>
-                        </div>
-                        <div class="detalhes-card">
-                            <div class="categoria-card">Sugestão</div>
-                            <h4>${item.titulo}</h4>
-                            <p>Plataforma VIDAFONTE</p>
-                        </div>
-                    </div>
-                `;
+        // Evento para pesquisar ao pressionar Enter no campo de entrada
+        document.getElementById('campoPesquisa').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                realizarPesquisa();
             }
         });
 
-        // Troca de vídeo dinâmica
-        function reproduzirOutro(novoVideo, fontTitulo) {
-            window.location.href = window.location.pathname + "?video=" + encodeURIComponent(novoVideo) + "&titulo=" + encodeURIComponent(fontTitulo);
+        function realizarPesquisa() {
+            const termoUsuario = document.getElementById('campoPesquisa').value.trim();
+            if (termoUsuario) {
+                // Combina o termo do usuário com o contexto de saúde e nutrição infantil
+                const buscaCombinada = `${termoUsuario} ${CONTEXTO_BASE}`;
+                carregarVideosYouTube(buscaCombinada);
+            } else {
+                carregarVideosYouTube(CONTEXTO_BASE);
+            }
         }
+
+        async function carregarVideosYouTube(termoBusca) {
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&q=${encodeURIComponent(termoBusca)}&type=video&key=${API_KEY}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    // Define o primeiro resultado como o vídeo em destaque
+                    const primeiroVideo = data.items[0];
+                    reproduzirVideo(primeiroVideo.id.videoId, primeiroVideo.snippet.title);
+
+                    // Renderiza os restantes na vitrine inferior
+                    const containerVitrine = document.getElementById("listaVideosLaterais");
+                    containerVitrine.innerHTML = '';
+
+                    data.items.slice(1).forEach(item => {
+                        const videoId = item.id.videoId;
+                        const titulo = item.snippet.title;
+                        const capa = item.snippet.thumbnails.high.url;
+
+                        containerVitrine.innerHTML += `
+                            <div class="card-streaming" onclick="reproduzirVideo('${videoId}', '${escapeHtml(titulo)}')">
+                                <div class="preview-video-container">
+                                    <img src="${capa}" alt="${titulo}">
+                                </div>
+                                <div class="detalhes-card">
+                                    <div class="categoria-card">Saúde & Nutrição</div>
+                                    <h4>${titulo}</h4>
+                                    <p>VIDAFONTE - YouTube</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    document.getElementById('tituloVideo').innerText = "Nenhum vídeo encontrado.";
+                }
+            } catch (error) {
+                console.error("Erro ao carregar vídeos:", error);
+                document.getElementById('tituloVideo').innerText = "Erro ao conectar com a API do YouTube.";
+            }
+        }
+
+     function reproduzirVideo(videoId, titulo) {
+    const player = document.getElementById('videoPrincipal');
+    
+    // Adiciona origin e remove parâmetros incompatíveis para evitar o Error 153
+    const origin = window.location.origin !== "null" ? window.location.origin : "http://localhost";
+    player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&origin=${encodeURIComponent(origin)}`;
+    
+    document.getElementById('tituloVideo').innerText = titulo;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+        function escapeHtml(text) {
+            return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        // Carrega os vídeos iniciais ao abrir a página
+        window.onload = () => carregarVideosYouTube(CONTEXTO_BASE);
     </script>
 
 </body>
