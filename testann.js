@@ -311,11 +311,11 @@ function falarBebeBrincalhao() {
     let textoFala = "";
 
     if (ult.statusEvolucao === "descida") {
-        textoFala = `Mamã! O(A) ${nomeCrianca} escorregou na montanha, hiya! Dá-me papinha gostosa para eu subir até ao topo!`;
+        textoFala = `Mamã! O ${nomeCrianca} escorregou na montanha, eeee! Dá-me papinha gostosa para eu subir até ao topo!`;
     } else if (ult.altura && ult.altura > 80) {
-        textoFala = `Ehei! O(A) ${nomeCrianca} já tem ${ult.altura} cm na régua! Daqui a nada chego no topo da Roda-Gigante, mamã!`;
+        textoFala = `Ehei! O ${nomeCrianca} já tem ${ult.altura} cm na régua! Daqui a nada chego no topo da Roda-Gigante, mamã!`;
     } else {
-        textoFala = `Olha eu a caminhar! O(A) ${nomeCrianca} está a ficar forte tipo leão! Vamos brincar no parque, mamã?`;
+        textoFala = `Olha eu a caminhar! O ${nomeCrianca} está a ficar forte tipo leão! Vamos brincar no parque, mamã?`;
     }
 
     if (balao) {
@@ -362,13 +362,13 @@ function realizarAvaliacaoSaude(medicao) {
     }
 
     if (medicao.statusEvolucao === "descida") {
-        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Alerta Clínico:</b> O(A) ${nomeCrianca} desceu na montanha! (${p}kg / ${a}cm aos ${medicao.idade}).</span>`;
-        mensagemDicas = `Mamã, reforça a papinha do(a) ${nomeCrianca} enriquecida com amendoim, peixe ou ovo e leva ao Centro de Saúde para rastreio.`;
+        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Alerta Clínico:</b> O ${nomeCrianca} desceu na montanha! (${p}kg / ${a}cm aos ${medicao.idade}).</span>`;
+        mensagemDicas = `Mamã, reforça a papinha do ${nomeCrianca} enriquecida com amendoim, peixe ou ovo e leva ao Centro de Saúde para rastreio.`;
     } else if (estadoMuac.includes("Desnutrição")) {
-        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Atenção do Nutricionista:</b> Braço de ${muac}cm indica risco nutricional para o(a) ${nomeCrianca}.</span>`;
+        mensagemStatus = `⚠️ <span style='color:#e53e3e;'><b>Atenção do Nutricionista:</b> Braço de ${muac}cm indica risco nutricional para o ${nomeCrianca}.</span>`;
         mensagemDicas = "Visita a consulta de Nutrição no Centro de Saúde para receber o acompanhamento adequado.";
     } else {
-        mensagemStatus = `✅ <span style='color:#27ae60;'><b>Desenvolvimento Adequado:</b> O(A) ${nomeCrianca} está com ${p}kg e ${a}cm na régua aos ${medicao.idade}.</span>`;
+        mensagemStatus = `✅ <span style='color:#27ae60;'><b>Desenvolvimento Adequado:</b> O ${nomeCrianca} está com ${p}kg e ${a}cm na régua aos ${medicao.idade}.</span>`;
         mensagemDicas = `Muito bem, mamã! Mantém a alimentação variada e vacinas em dia para o(a) ${nomeCrianca} continuar a subir a montanha!`;
     }
 
