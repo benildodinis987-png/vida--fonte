@@ -112,10 +112,33 @@
             background: #f5f5f5;
         }
 
+        /* BOTÃO VOLTAR (DEPOIS DO CABEÇALHO) */
+        .bar-top-actions {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-voltar {
+            background: #f1f5f9;
+            color: var(--texto);
+            border: 1px solid var(--borda-suave);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-voltar:hover {
+            background: #e2e8f0;
+        }
+
         /* BARRA DE PESQUISA E SUGESTÕES */
         .search-wrapper {
             position: relative;
-            margin: 25px 0 15px 0;
+            margin: 20px 0 15px 0;
             width: 100%;
         }
 
@@ -156,7 +179,6 @@
             background: #1d4ed8;
         }
 
-        /* Painel de Sugestões */
         .suggestions-box {
             position: absolute;
             top: 100%;
@@ -218,7 +240,7 @@
             border: none;
         }
 
-        /* INFORMAÇÕES DO VÍDEO */
+        /* INFORMAÇÕES E AÇÕES DO VÍDEO */
         .info-video-principal {
             margin-top: 24px;
         }
@@ -241,6 +263,34 @@
             margin: 0 0 16px;
             font-weight: 700;
             letter-spacing: -0.5px;
+        }
+
+        /* BARRA DE AÇÕES (DOWNLOAD, COMPARTILHAR, COPIAR) */
+        .acoes-video {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .btn-acao {
+            background: var(--bg-card);
+            border: 1px solid var(--borda-suave);
+            color: var(--texto);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-acao:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
         }
 
         .descricao-texto {
@@ -362,10 +412,15 @@
                     <a href="acessibilidade.html"> Acessibilidade</a>
                     <a href="feedback.html"> Feedback</a>
                     <a href="Denuncia.html"> Denúncia</a>
-                    <a href="sobree.html">ℹ Sobre</a>
-                    <a href="Login 2.js.html"> Sair da Conta</a>
+                    <a href="sobree.html">ℹSobre</a>
+                    <a href="index.html"> Sair da Conta</a>
                 </div>
             </div>
+        </div>
+
+        <!-- BOTÃO PARA VOLTAR APÓS A LINHA DO CABEÇALHO -->
+        <div class="bar-top-actions">
+            <button class="btn-voltar" onclick="history.back()">← Voltar</button>
         </div>
 
         <!-- BARRA DE PESQUISA COM AUTOCOMPLETE -->
@@ -388,6 +443,14 @@
                 <div class="info-video-principal">
                     <span class="tag-canal">VIDAFONTE</span>
                     <h1 id="tituloVideo">Carregando conteúdo...</h1>
+                    
+                    <!-- BOTÕES DE AÇÃO DO VÍDEO -->
+                    <div class="acoes-video">
+                        <button class="btn-acao" onclick="copiarLink()">🔗 Copiar Link</button>
+                        <button class="btn-acao" onclick="partilharVideo()">🔗 Partilhar</button>
+                        <button class="btn-acao" onclick="baixarVideo()">📥 Baixar Vídeo</button>
+                    </div>
+
                     <p class="descricao-texto">
                         Espaço dedicado ao bem-estar, direitos e alimentação saudável na infância. Conteúdo educacional fornecido pela comunidade e órgãos de saúde.
                     </p>
@@ -409,6 +472,7 @@
 
     <script>
         const API_KEY = 'AIzaSyAIVenDhGIM1LxmKqV6yWnnQmt8FpguHSk'; 
+        let videoIdAtual = '';
 
         function toggleMenu() {
             const menu = document.getElementById('menu');
@@ -426,7 +490,6 @@
                 return;
             }
 
-            // Busca sugestões da API de autocomplete do YouTube via JSONP
             const script = document.createElement('script');
             script.src = `https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=${encodeURIComponent(termo)}&jsonp=processarSugestoes`;
             document.body.appendChild(script);
@@ -455,7 +518,6 @@
             }
         };
 
-        // Ocultar sugestões ao clicar fora
         document.addEventListener('click', (e) => {
             if (!campoPesquisa.contains(e.target) && !caixaSugestoes.contains(e.target)) {
                 caixaSugestoes.style.display = 'none';
@@ -524,20 +586,49 @@
             });
         }
 
-        /* CLIQUE NO VÍDEO: ATUALIZA O PLAYER E ATUALIZA A VITRINE DINAMICAMENTE */
         function selecionarEVisto(videoId, titulo) {
             atualizarPlayer(videoId, titulo);
-            // Busca novos vídeos com base no título do vídeo recém-selecionado
             carregarVideosYouTube(titulo);
         }
 
         function atualizarPlayer(videoId, titulo) {
+            videoIdAtual = videoId;
             const player = document.getElementById('videoPrincipal');
             const origin = window.location.origin !== "null" ? window.location.origin : "http://localhost";
             
             player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&origin=${encodeURIComponent(origin)}`;
             document.getElementById('tituloVideo').innerText = titulo;
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* AÇÕES DO VÍDEO (COPIAR, PARTILHAR, DOWNLOAD) */
+        function copiarLink() {
+            if (!videoIdAtual) return;
+            const link = `https://www.youtube.com/watch?v=${videoIdAtual}`;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link do vídeo copiado com sucesso!');
+            });
+        }
+
+        function partilharVideo() {
+            if (!videoIdAtual) return;
+            const link = `https://www.youtube.com/watch?v=${videoIdAtual}`;
+            const titulo = document.getElementById('tituloVideo').innerText;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: titulo,
+                    url: link
+                }).catch(() => {});
+            } else {
+                copiarLink();
+            }
+        }
+
+        function baixarVideo() {
+            if (!videoIdAtual) return;
+            const linkDownload = `https://www.y2mate.com/pt/youtube/${videoIdAtual}`;
+            window.open(linkDownload, '_blank');
         }
 
         function escapeHtml(text) {
