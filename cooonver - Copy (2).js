@@ -21,7 +21,7 @@ const historyList = document.getElementById('historyList');
 
 // Cole aqui a sua NOVA chave da API.
 // Não publique esta chave num site público.
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = "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";
 
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "openai/gpt-oss-20b";
