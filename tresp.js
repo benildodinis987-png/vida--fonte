@@ -1,4 +1,5 @@
 function registrar() {
+
     const nomeInput = document.getElementById("nome");
     const dataNascimentoInput = document.getElementById("data-nascimento");
     const bairroInput = document.getElementById("bar");
@@ -15,9 +16,10 @@ function registrar() {
     const senha = senhaInput.value;
     const confirmarSenha = confirmarSenhaInput.value;
 
-    // ==============================
+
+    // ==========================================
     // VERIFICAR CAMPOS VAZIOS
-    // ==============================
+    // ==========================================
 
     if (
         !nome ||
@@ -32,11 +34,12 @@ function registrar() {
         return;
     }
 
-    // ==============================
-    // VALIDAR NOME
-    // ==============================
 
-    // Apenas letras, espaços e acentos
+    // ==========================================
+    // VALIDAR NOME
+    // Apenas letras e espaços
+    // ==========================================
+
     const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
 
     if (!nomeRegex.test(nome)) {
@@ -45,7 +48,8 @@ function registrar() {
         return;
     }
 
-    // Nome deve ter pelo menos duas palavras
+
+    // Nome completo
     const partesNome = nome.split(/\s+/);
 
     if (partesNome.length < 2) {
@@ -54,9 +58,10 @@ function registrar() {
         return;
     }
 
-    // ==============================
+
+    // ==========================================
     // VALIDAR DATA DE NASCIMENTO
-    // ==============================
+    // ==========================================
 
     const dataNascimentoObj = new Date(dataNascimento + "T00:00:00");
     const hoje = new Date();
@@ -69,11 +74,12 @@ function registrar() {
         return;
     }
 
-    // ==============================
-    // VALIDAR BAIRRO
-    // ==============================
 
-    // Permite letras, números, espaços e alguns sinais comuns
+    // ==========================================
+    // VALIDAR ONDE VIVE
+    // Letras, números, espaços e sinais básicos
+    // ==========================================
+
     const bairroRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s.,'-]+$/;
 
     if (!bairroRegex.test(bairro)) {
@@ -82,9 +88,10 @@ function registrar() {
         return;
     }
 
-    // ==============================
+
+    // ==========================================
     // VALIDAR GÉNERO
-    // ==============================
+    // ==========================================
 
     if (!["1", "2", "3"].includes(genero)) {
         alert("Escolha um género válido.");
@@ -92,11 +99,12 @@ function registrar() {
         return;
     }
 
-    // ==============================
-    // VALIDAR TELEFONE
-    // ==============================
 
-    // Só permite números
+    // ==========================================
+    // VALIDAR TELEFONE
+    // Somente números
+    // ==========================================
+
     const telefoneRegex = /^[0-9]+$/;
 
     if (!telefoneRegex.test(telefone)) {
@@ -105,16 +113,26 @@ function registrar() {
         return;
     }
 
-    // Número moçambicano com 9 dígitos
+
+    // Exactamente 9 números
     if (telefone.length !== 9) {
         alert("O número de telefone deve ter 9 dígitos.");
         telefoneInput.focus();
         return;
     }
 
-    // Prefixos comuns de telemóveis em Moçambique
+
+    // ==========================================
+    // PREFIXOS DE MOÇAMBIQUE
+    // ==========================================
+
     const prefixosValidos = [
-        "82", "83", "84", "85", "86", "87"
+        "82",
+        "83",
+        "84",
+        "85",
+        "86",
+        "87"
     ];
 
     const prefixo = telefone.substring(0, 2);
@@ -125,9 +143,12 @@ function registrar() {
         return;
     }
 
-    // ==============================
+
+    // ==========================================
     // VALIDAR SENHA
-    // ==============================
+    // Mínimo 6 caracteres
+    // Letras, números e símbolos permitidos
+    // ==========================================
 
     if (senha.length < 6) {
         alert("A senha deve ter pelo menos 6 caracteres.");
@@ -135,9 +156,10 @@ function registrar() {
         return;
     }
 
-    // ==============================
+
+    // ==========================================
     // CONFIRMAR SENHA
-    // ==============================
+    // ==========================================
 
     if (senha !== confirmarSenha) {
         alert("As senhas não são iguais!");
@@ -145,9 +167,28 @@ function registrar() {
         return;
     }
 
-    // ==============================
+
+    // ==========================================
+    // VERIFICAR SE O TELEFONE JÁ ESTÁ CADASTRADO
+    // ==========================================
+
+    const usuarioExistente = localStorage.getItem("usuario");
+
+    if (usuarioExistente) {
+
+        const dadosExistentes = JSON.parse(usuarioExistente);
+
+        if (dadosExistentes.telefone === telefone) {
+            alert("Este número de telefone já está cadastrado.");
+            telefoneInput.focus();
+            return;
+        }
+    }
+
+
+    // ==========================================
     // CRIAR UTILIZADOR
-    // ==============================
+    // ==========================================
 
     const usuario = {
         nome: nome,
@@ -158,24 +199,47 @@ function registrar() {
         senha: senha
     };
 
-    // ==============================
-    // GUARDAR NO LOCALSTORAGE
-    // ==============================
 
-    localStorage.setItem("usuario", JSON.stringify(usuario));
+    // ==========================================
+    // GUARDAR DADOS
+    // ==========================================
 
-    // Confirmar no console
-    console.log("Utilizador guardado:", usuario);
+    localStorage.setItem(
+        "usuario",
+        JSON.stringify(usuario)
+    );
 
-    // ==============================
+
+    // ==========================================
+    // CRIAR SESSÃO DO UTILIZADOR
+    // ==========================================
+
+    localStorage.setItem(
+        "usuarioLogado",
+        "true"
+    );
+
+
+    // ==========================================
+    // GUARDAR TELEFONE DO UTILIZADOR
+    // ==========================================
+
+    localStorage.setItem(
+        "telefoneUsuario",
+        telefone
+    );
+
+
+    // ==========================================
     // CONFIRMAÇÃO
-    // ==============================
+    // ==========================================
 
     alert("Cadastro realizado com sucesso!");
 
-    // ==============================
+
+    // ==========================================
     // IR PARA LOGIN
-    // ==============================
+    // ==========================================
 
     window.location.href = "index.html";
 }
