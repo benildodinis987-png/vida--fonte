@@ -1,6 +1,12 @@
-/* ==========================================
+/* =========================================================
+   VIDA FONTE - REGISTO DE CRIANÇA
+   tresp.js
+   ========================================================= */
+
+
+/* =========================================================
    ELEMENTOS DO FORMULÁRIO
-========================================== */
+   ========================================================= */
 
 const nomeInput = document.getElementById("nome");
 const dataNascimentoInput = document.getElementById("data-nascimento");
@@ -11,296 +17,314 @@ const senhaInput = document.getElementById("senha");
 const confirmarSenhaInput = document.getElementById("confirmar-senha");
 
 
-/* ==========================================
-   CORES DOS CAMPOS
-========================================== */
+/* =========================================================
+   FUNÇÃO PARA MARCAR CAMPO COMO VÁLIDO
+   ========================================================= */
 
 function campoValido(campo) {
+
+    if (!campo) return;
+
     campo.classList.remove("campo-invalido");
     campo.classList.add("campo-valido");
 }
 
 
+/* =========================================================
+   FUNÇÃO PARA MARCAR CAMPO COMO INVÁLIDO
+   ========================================================= */
+
 function campoInvalido(campo) {
+
+    if (!campo) return;
+
     campo.classList.remove("campo-valido");
     campo.classList.add("campo-invalido");
 }
 
 
-function campoNormal(campo) {
+/* =========================================================
+   REMOVER ESTADO DE VALIDAÇÃO
+   ========================================================= */
+
+function limparEstado(campo) {
+
+    if (!campo) return;
+
     campo.classList.remove("campo-valido");
     campo.classList.remove("campo-invalido");
 }
 
 
-/* ==========================================
+/* =========================================================
    VALIDAR NOME
-   SOMENTE LETRAS E ESPAÇOS
-========================================== */
+   Apenas letras e espaços
+   ========================================================= */
 
 function validarNome() {
 
+    if (!nomeInput) return false;
+
     const nome = nomeInput.value.trim();
 
-    if (nome === "") {
-        campoNormal(nomeInput);
-        return false;
-    }
+    // Permite letras portuguesas e espaços
+    const regexNome = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
 
-    const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+    if (nome.length < 2 || !regexNome.test(nome)) {
 
-    if (!nomeRegex.test(nome)) {
-        campoInvalido(nomeInput);
-        return false;
-    }
-
-    const partesNome = nome.split(/\s+/);
-
-    if (partesNome.length < 2) {
         campoInvalido(nomeInput);
         return false;
     }
 
     campoValido(nomeInput);
-
     return true;
 }
 
 
-/* ==========================================
+/* =========================================================
    VALIDAR DATA DE NASCIMENTO
-========================================== */
+   Não pode estar vazia
+   Não pode ser uma data futura
+   ========================================================= */
 
-function validarData() {
+function validarDataNascimento() {
+
+    if (!dataNascimentoInput) return false;
 
     const data = dataNascimentoInput.value;
 
-    if (data === "") {
-        campoNormal(dataNascimentoInput);
+    if (!data) {
+
+        campoInvalido(dataNascimentoInput);
         return false;
     }
 
-    const dataObj = new Date(data + "T00:00:00");
-
+    const dataSelecionada = new Date(data + "T00:00:00");
     const hoje = new Date();
 
     hoje.setHours(0, 0, 0, 0);
 
-    if (dataObj > hoje) {
+    if (dataSelecionada > hoje) {
+
         campoInvalido(dataNascimentoInput);
         return false;
     }
 
     campoValido(dataNascimentoInput);
-
     return true;
 }
 
 
-/* ==========================================
-   VALIDAR LOCALIZAÇÃO
-   LETRAS, NÚMEROS E PONTUAÇÃO
-========================================== */
+/* =========================================================
+   VALIDAR BAIRRO / LOCAL ONDE VIVE
+   Permite letras, números, espaços e pontuação comum
+   ========================================================= */
 
 function validarBairro() {
 
+    if (!bairroInput) return false;
+
     const bairro = bairroInput.value.trim();
 
-    if (bairro === "") {
-        campoNormal(bairroInput);
-        return false;
-    }
+    const regexBairro = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s.,'’\-\/]+$/;
 
-    const bairroRegex =
-        /^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s.,'-]+$/;
+    if (
+        bairro.length < 2 ||
+        !regexBairro.test(bairro)
+    ) {
 
-    if (!bairroRegex.test(bairro)) {
         campoInvalido(bairroInput);
         return false;
     }
 
     campoValido(bairroInput);
-
     return true;
 }
 
 
-/* ==========================================
+/* =========================================================
    VALIDAR GÉNERO
-========================================== */
+   Valores permitidos:
+   1 = Homem
+   2 = Mulher
+   3 = Outro
+   ========================================================= */
 
 function validarGenero() {
 
-    if (!["1", "2", "3"].includes(generoInput.value)) {
+    if (!generoInput) return false;
+
+    const genero = generoInput.value;
+
+    if (!["1", "2", "3"].includes(genero)) {
 
         campoInvalido(generoInput);
-
         return false;
     }
 
     campoValido(generoInput);
-
     return true;
 }
 
 
-/* ==========================================
+/* =========================================================
    VALIDAR TELEFONE
-   SOMENTE NÚMEROS
-========================================== */
+   Moçambique:
+   82, 83, 84, 85, 86 ou 87
+   Exactamente 9 dígitos
+   ========================================================= */
 
 function validarTelefone() {
 
-    const telefone = telefoneInput.value.trim();
+    if (!telefoneInput) return false;
 
-    if (telefone === "") {
-        campoNormal(telefoneInput);
-        return false;
-    }
+    // Remover tudo que não seja número
+    telefoneInput.value = telefoneInput.value.replace(/\D/g, "");
 
-    const telefoneRegex = /^[0-9]+$/;
+    const telefone = telefoneInput.value;
 
-    if (!telefoneRegex.test(telefone)) {
-        campoInvalido(telefoneInput);
-        return false;
-    }
+    const regexTelefone = /^(82|83|84|85|86|87)\d{7}$/;
 
-    if (telefone.length !== 9) {
-        campoInvalido(telefoneInput);
-        return false;
-    }
+    if (!regexTelefone.test(telefone)) {
 
-    const prefixosValidos = [
-        "82",
-        "83",
-        "84",
-        "85",
-        "86",
-        "87"
-    ];
-
-    const prefixo = telefone.substring(0, 2);
-
-    if (!prefixosValidos.includes(prefixo)) {
         campoInvalido(telefoneInput);
         return false;
     }
 
     campoValido(telefoneInput);
-
     return true;
 }
 
 
-/* ==========================================
+/* =========================================================
    VALIDAR SENHA
-   MÍNIMO 6 CARACTERES
-   PODE TER LETRAS, NÚMEROS E SÍMBOLOS
-========================================== */
+   Mínimo de 6 caracteres
+   ========================================================= */
 
 function validarSenha() {
 
+    if (!senhaInput) return false;
+
     const senha = senhaInput.value;
 
-    if (senha === "") {
-        campoNormal(senhaInput);
-        return false;
-    }
-
     if (senha.length < 6) {
+
         campoInvalido(senhaInput);
         return false;
     }
 
     campoValido(senhaInput);
-
     return true;
 }
 
 
-/* ==========================================
-   CONFIRMAR SENHA
-========================================== */
+/* =========================================================
+   VALIDAR CONFIRMAÇÃO DA SENHA
+   ========================================================= */
 
-function validarConfirmacaoSenha() {
+function validarConfirmarSenha() {
+
+    if (!confirmarSenhaInput) return false;
 
     const senha = senhaInput.value;
-    const confirmar = confirmarSenhaInput.value;
+    const confirmarSenha = confirmarSenhaInput.value;
 
-    if (confirmar === "") {
-        campoNormal(confirmarSenhaInput);
-        return false;
-    }
+    if (
+        confirmarSenha.length < 6 ||
+        confirmarSenha !== senha
+    ) {
 
-    if (senha !== confirmar) {
         campoInvalido(confirmarSenhaInput);
         return false;
     }
 
     campoValido(confirmarSenhaInput);
-
     return true;
 }
 
 
-/* ==========================================
-   VALIDAÇÃO AUTOMÁTICA
-========================================== */
+/* =========================================================
+   VALIDAÇÃO AUTOMÁTICA ENQUANTO O UTILIZADOR ESCREVE
+   ========================================================= */
 
-nomeInput.addEventListener("input", validarNome);
+if (nomeInput) {
 
-dataNascimentoInput.addEventListener("change", validarData);
+    nomeInput.addEventListener("input", validarNome);
+}
 
-bairroInput.addEventListener("input", validarBairro);
+if (dataNascimentoInput) {
 
-generoInput.addEventListener("change", validarGenero);
+    dataNascimentoInput.addEventListener("change", validarDataNascimento);
+}
 
-telefoneInput.addEventListener("input", function () {
+if (bairroInput) {
 
-    /* Remove tudo que não for número */
+    bairroInput.addEventListener("input", validarBairro);
+}
 
-    this.value = this.value.replace(/\D/g, "");
+if (generoInput) {
 
-    validarTelefone();
+    generoInput.addEventListener("change", validarGenero);
+}
 
-});
+if (telefoneInput) {
+
+    telefoneInput.addEventListener("input", function () {
+
+        // Permitir apenas números
+        this.value = this.value.replace(/\D/g, "");
+
+        // Limitar a 9 dígitos
+        if (this.value.length > 9) {
+
+            this.value = this.value.substring(0, 9);
+        }
+
+        validarTelefone();
+    });
+}
+
+if (senhaInput) {
+
+    senhaInput.addEventListener("input", function () {
+
+        validarSenha();
+
+        // Actualizar também a confirmação
+        if (confirmarSenhaInput.value.length > 0) {
+            validarConfirmarSenha();
+        }
+    });
+}
+
+if (confirmarSenhaInput) {
+
+    confirmarSenhaInput.addEventListener(
+        "input",
+        validarConfirmarSenha
+    );
+}
 
 
-senhaInput.addEventListener("input", function () {
-
-    validarSenha();
-
-    if (confirmarSenhaInput.value !== "") {
-        validarConfirmacaoSenha();
-    }
-
-});
-
-
-confirmarSenhaInput.addEventListener(
-    "input",
-    validarConfirmacaoSenha
-);
-
-
-/* ==========================================
-   REGISTRAR
-========================================== */
+/* =========================================================
+   FUNÇÃO PRINCIPAL DE REGISTO
+   ========================================================= */
 
 function registrar() {
 
+    // Executar todas as validações
     const nomeValido = validarNome();
-    const dataValida = validarData();
+    const dataValida = validarDataNascimento();
     const bairroValido = validarBairro();
     const generoValido = validarGenero();
     const telefoneValido = validarTelefone();
     const senhaValida = validarSenha();
-    const confirmacaoValida = validarConfirmacaoSenha();
+    const confirmacaoValida = validarConfirmarSenha();
 
 
-    /* ======================================
-       VERIFICAR TODOS OS CAMPOS
-    ====================================== */
+    /* =====================================================
+       SE ALGUM CAMPO FOR INVÁLIDO
+       ===================================================== */
 
     if (
         !nomeValido ||
@@ -312,79 +336,42 @@ function registrar() {
         !confirmacaoValida
     ) {
 
+        // Mostrar mensagem sem utilizar alert em excesso
         alert(
-            "Existem campos incorrectos. Verifique os campos assinalados a vermelho."
+            "Por favor, corrija os campos destacados a vermelho."
         );
-
-        /* Colocar foco no primeiro campo inválido */
-
-        if (!nomeValido) {
-            nomeInput.focus();
-        }
-        else if (!dataValida) {
-            dataNascimentoInput.focus();
-        }
-        else if (!bairroValido) {
-            bairroInput.focus();
-        }
-        else if (!generoValido) {
-            generoInput.focus();
-        }
-        else if (!telefoneValido) {
-            telefoneInput.focus();
-        }
-        else if (!senhaValida) {
-            senhaInput.focus();
-        }
-        else if (!confirmacaoValida) {
-            confirmarSenhaInput.focus();
-        }
 
         return;
     }
 
 
-    /* ======================================
-       VERIFICAR SE O TELEFONE JÁ EXISTE
-    ====================================== */
+    /* =====================================================
+       VERIFICAR SE JÁ EXISTE UMA CONTA COM O MESMO TELEFONE
+       ===================================================== */
 
     const usuarioExistente =
-        localStorage.getItem("usuario");
+        JSON.parse(localStorage.getItem("usuario"));
 
-    if (usuarioExistente) {
+    if (
+        usuarioExistente &&
+        usuarioExistente.telefone === telefoneInput.value.trim()
+    ) {
 
-        try {
+        campoInvalido(telefoneInput);
 
-            const dadosExistentes =
-                JSON.parse(usuarioExistente);
+        alert(
+            "Este número de telefone já está registado na plataforma VidaFonte."
+        );
 
-            if (dadosExistentes.telefone === telefoneInput.value.trim()) {
+        telefoneInput.focus();
 
-                campoInvalido(telefoneInput);
-
-                alert(
-                    "Este número de telefone já está cadastrado."
-                );
-
-                telefoneInput.focus();
-
-                return;
-            }
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao ler os dados existentes:",
-                erro
-            );
-
-        }
+        return;
     }
 
 
-    /* ======================================
+    /* =====================================================
        CRIAR OBJECTO DO UTILIZADOR
-    ====================================== */
+       ===================================================== */
 
     const usuario = {
 
@@ -407,39 +394,30 @@ function registrar() {
 
         dataCadastro:
             new Date().toISOString()
-
     };
 
 
-    /* ======================================
-       GUARDAR UTILIZADOR
-    ====================================== */
+    /* =====================================================
+       GUARDAR OS DADOS
+       ===================================================== */
 
+    // Principal
     localStorage.setItem(
         "usuario",
         JSON.stringify(usuario)
     );
 
-
-    /* ======================================
-       CRIAR SESSÃO
-    ====================================== */
-
+    // Dados utilizados pelo perfil
     localStorage.setItem(
-        "usuarioLogado",
-        "true"
+        "dadosBebe",
+        JSON.stringify(usuario)
     );
 
-
+    // Informações auxiliares
     localStorage.setItem(
         "telefoneUsuario",
         usuario.telefone
     );
-
-
-    /* ======================================
-       GUARDAR NOME
-    ====================================== */
 
     localStorage.setItem(
         "nomeCrianca",
@@ -447,38 +425,94 @@ function registrar() {
     );
 
 
-    /* ======================================
-       PREPARAR POPUP
-    ====================================== */
+    /* =====================================================
+       IMPORTANTE:
+       NÃO DEFINIMOS "logado" AQUI.
 
-    document.getElementById(
-        "nomeCriancaPopup"
-    ).textContent = usuario.nome;
+       O utilizador será considerado autenticado
+       somente depois de introduzir correctamente
+       telefone + senha no LOGIN.
+       ===================================================== */
+
+    localStorage.removeItem("logado");
+    localStorage.removeItem("usuarioLogado");
 
 
-    /* ======================================
-       MOSTRAR POPUP
-    ====================================== */
+    /* =====================================================
+       MOSTRAR NOME NO POPUP
+       ===================================================== */
 
-    document.getElementById(
-        "popupSucesso"
-    ).classList.add("mostrar");
+    const nomePopup =
+        document.getElementById("nomeCriancaPopup");
 
+    if (nomePopup) {
+
+        nomePopup.textContent = usuario.nome;
+    }
+
+
+    /* =====================================================
+       MOSTRAR POPUP DE SUCESSO
+       ===================================================== */
+
+    const popup =
+        document.getElementById("popupSucesso");
+
+    if (popup) {
+
+        popup.classList.add("mostrar");
+
+    } else {
+
+        // Caso o popup não exista no HTML
+        alert(
+            "Parabéns! A conta de " +
+            usuario.nome +
+            " foi criada com sucesso na plataforma VidaFonte."
+        );
+    }
 }
 
 
-/* ==========================================
+/* =========================================================
    FECHAR POPUP
-========================================== */
+   ========================================================= */
 
 function fecharPopup() {
 
-    document.getElementById(
-        "popupSucesso"
-    ).classList.remove("mostrar");
+    const popup =
+        document.getElementById("popupSucesso");
+
+    if (!popup) return;
+
+    popup.classList.remove("mostrar");
 
 
-    /* Ir para a página de login */
+    /* =====================================================
+       DEPOIS DO REGISTO, IR PARA O LOGIN
+       ===================================================== */
 
-    window.location.href = "index.html";
+    setTimeout(function () {
+
+        window.location.href = "index.html";
+
+    }, 300);
+}
+
+
+/* =========================================================
+   IMPEDIR FORMULÁRIO DE SER ENVIADO AUTOMATICAMENTE
+   ========================================================= */
+
+const formulario =
+    document.querySelector("form");
+
+if (formulario) {
+
+    formulario.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        registrar();
+    });
 }
