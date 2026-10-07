@@ -140,3 +140,303 @@ body {
     color: #4a5a6a;
     font-weight: 600;
 }
+
+
+/* =====================================================
+   CORES DOS CAMPOS
+===================================================== */
+
+/* Campo preenchido correctamente */
+.input.campo-valido {
+    border: 2px solid #28a745 !important;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+/* Campo preenchido incorrectamente */
+.input.campo-invalido {
+    border: 2px solid #dc3545 !important;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+
+/* =====================================================
+   FUNDO DO POPUP
+===================================================== */
+
+.popup-overlay {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+
+    z-index: 99999;
+}
+
+
+/* =====================================================
+   MOSTRAR POPUP
+===================================================== */
+
+.popup-overlay.mostrar {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* =====================================================
+   CAIXA DO POPUP
+===================================================== */
+
+.popup-box {
+    width: 100%;
+    max-width: 420px;
+
+    background: #ffffff;
+
+    border-radius: 22px;
+
+    padding: 35px 28px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.30);
+
+    transform: scale(0.75) translateY(30px);
+
+    opacity: 0;
+
+    transition:
+        transform 0.4s ease,
+        opacity 0.4s ease;
+}
+
+
+/* =====================================================
+   ANIMAÇÃO DA CAIXA
+===================================================== */
+
+.popup-overlay.mostrar .popup-box {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+
+/* =====================================================
+   ÍCONE DE SUCESSO
+===================================================== */
+
+.popup-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: #28a745;
+
+    color: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 42px;
+
+    font-weight: bold;
+
+    box-shadow:
+        0 8px 20px rgba(40, 167, 69, 0.30);
+
+    animation: aparecerIcone 0.5s ease;
+}
+
+
+/* =====================================================
+   ANIMAÇÃO DO ÍCONE
+===================================================== */
+
+@keyframes aparecerIcone {
+
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.popup-box h2 {
+    margin: 5px 0 15px;
+
+    color: #1f7a3a;
+
+    font-size: 27px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   TEXTOS
+===================================================== */
+
+.popup-box p {
+    margin: 8px 0;
+
+    color: #555555;
+
+    font-size: 16px;
+
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   NOME DA CRIANÇA
+===================================================== */
+
+.popup-box h3 {
+    margin: 15px 0 25px;
+
+    color: #222222;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    word-break: break-word;
+}
+
+
+/* =====================================================
+   BOTÃO CONTINUAR
+===================================================== */
+
+.popup-box button {
+    border: none;
+
+    background: #28a745;
+
+    color: #ffffff;
+
+    padding: 13px 30px;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* =====================================================
+   EFEITO AO PASSAR O RATO
+===================================================== */
+
+.popup-box button:hover {
+    background: #218838;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 15px rgba(40, 167, 69, 0.30);
+}
+
+
+/* =====================================================
+   EFEITO AO CLICAR
+===================================================== */
+
+.popup-box button:active {
+    transform: scale(0.96);
+}
+
+
+/* =====================================================
+   RESPONSIVO PARA TELEMÓVEIS
+===================================================== */
+
+@media (max-width: 480px) {
+
+    .popup-overlay {
+        padding: 15px;
+    }
+
+    .popup-box {
+        max-width: 100%;
+
+        padding: 28px 20px;
+
+        border-radius: 18px;
+    }
+
+    .popup-icon {
+        width: 65px;
+        height: 65px;
+
+        font-size: 36px;
+    }
+
+    .popup-box h2 {
+        font-size: 23px;
+    }
+
+    .popup-box p {
+        font-size: 15px;
+    }
+
+    .popup-box h3 {
+        font-size: 19px;
+    }
+
+    .popup-box button {
+        width: 100%;
+    }
+}
