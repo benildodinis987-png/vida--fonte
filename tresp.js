@@ -2,6 +2,7 @@
    VIDA FONTE
    tresp.js
    REGISTO + RECUPERAÇÃO DE SENHA
+   VERSÃO ACTUALIZADA
    ========================================================= */
 
 
@@ -12,16 +13,14 @@
 const selectMetodo = document.getElementById("gener");
 
 /*
-   Na página de REGISTO:
+   REGISTO:
    1 = Homem
    2 = Mulher
    3 = Outro
 
-   Na página de RECUPERAÇÃO:
+   RECUPERAÇÃO:
    1 = Telefone
    2 = G-mail
-
-   Assim conseguimos distinguir automaticamente as páginas.
 */
 
 const paginaRecuperacao =
@@ -33,15 +32,21 @@ const paginaRecuperacao =
    ELEMENTOS COMUNS
    ========================================================= */
 
-const nomeInput = document.getElementById("nome");
-const telefoneInput = document.getElementById("telefone");
-const senhaInput = document.getElementById("senha");
+const nomeInput =
+    document.getElementById("nome");
+
+const telefoneInput =
+    document.getElementById("telefone");
+
+const senhaInput =
+    document.getElementById("senha");
+
 const confirmarSenhaInput =
     document.getElementById("confirmar-senha");
 
 
 /* =========================================================
-   FUNÇÕES DE ESTADO DOS CAMPOS
+   ESTADO VISUAL DOS CAMPOS
    ========================================================= */
 
 function campoValido(campo) {
@@ -72,30 +77,307 @@ function limparEstado(campo) {
 
 
 /* =========================================================
-   ==================== REGISTO =============================
+   NORMALIZAÇÃO
    ========================================================= */
+
+function normalizarTexto(texto) {
+
+    return String(texto || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+
+function normalizarNome(nome) {
+
+    return normalizarTexto(nome);
+}
+
+
+function obterUsuarios() {
+
+    let usuarios = [];
+
+    try {
+
+        usuarios =
+            JSON.parse(
+                localStorage.getItem("usuarios") || "[]"
+            );
+
+    } catch (erro) {
+
+        usuarios = [];
+    }
+
+
+    if (!Array.isArray(usuarios)) {
+
+        usuarios = [];
+    }
+
+
+    /*
+       MIGRAÇÃO DO SISTEMA ANTIGO
+
+       Se já existia um único utilizador guardado
+       em "usuario", ele passa automaticamente
+       para a nova lista "usuarios".
+    */
+
+    let usuarioAntigo = null;
+
+    try {
+
+        usuarioAntigo =
+            JSON.parse(
+                localStorage.getItem("usuario") || "null"
+            );
+
+    } catch (erro) {
+
+        usuarioAntigo = null;
+    }
+
+
+    if (
+        usuarioAntigo &&
+        typeof usuarioAntigo === "object"
+    ) {
+
+        const existe = usuarios.some(function (u) {
+
+            return (
+                String(u.telefone || "") ===
+                String(usuarioAntigo.telefone || "") &&
+
+                String(u.dataNascimento || "") ===
+                String(usuarioAntigo.dataNascimento || "")
+            );
+
+        });
+
+
+        if (!existe) {
+
+            usuarios.push(usuarioAntigo);
+
+            localStorage.setItem(
+                "usuarios",
+                JSON.stringify(usuarios)
+            );
+        }
+    }
+
+
+    return usuarios;
+}
+
+
+function guardarUsuarios(usuarios) {
+
+    localStorage.setItem(
+        "usuarios",
+        JSON.stringify(usuarios)
+    );
+}
 
 
 /* =========================================================
-   ELEMENTOS DO REGISTO
+   ID ÚNICO DO UTILIZADOR
    ========================================================= */
 
-const dataNascimentoInput =
-    document.getElementById("data-nascimento");
+function gerarIdUtilizador() {
 
-const bairroInput =
-    document.getElementById("bar");
+    return (
+        Date.now().toString(36) +
+        "-" +
+        Math.random().toString(36).substring(2, 10)
+    );
+}
 
-const generoInput =
-    document.getElementById("gener");
+
+/* =========================================================
+   IDADE
+   ========================================================= */
+
+function calcularIdade(dataNascimento) {
+
+    if (!dataNascimento) return -1;
+
+    const nascimento =
+        new Date(dataNascimento + "T00:00:00");
+
+    if (isNaN(nascimento.getTime())) {
+
+        return -1;
+    }
 
 
-/*
-   Só executar as validações de registo quando estivermos
-   realmente na página de registo.
-*/
+    const hoje = new Date();
+
+    let idade =
+        hoje.getFullYear() -
+        nascimento.getFullYear();
+
+
+    const mes =
+        hoje.getMonth() -
+        nascimento.getMonth();
+
+
+    if (
+        mes < 0 ||
+        (
+            mes === 0 &&
+            hoje.getDate() < nascimento.getDate()
+        )
+    ) {
+
+        idade--;
+    }
+
+
+    return idade;
+}
+
+
+/* =========================================================
+   ASSINATURA DO UTILIZADOR
+   ========================================================= */
+
+function criarAssinatura(usuario) {
+
+    return [
+
+        normalizarNome(usuario.nome),
+
+        String(usuario.dataNascimento || ""),
+
+        normalizarTexto(usuario.bairro),
+
+        String(usuario.genero || ""),
+
+        String(usuario.telefone || "")
+
+    ].join("|");
+}
+
+
+/* =========================================================
+   VERIFICAR UTILIZADOR DUPLICADO
+   ========================================================= */
+
+function verificarDuplicado(usuario, usuarios) {
+
+    const telefone =
+        String(usuario.telefone || "").trim();
+
+
+    const nome =
+        normalizarNome(usuario.nome);
+
+
+    const dataNascimento =
+        String(usuario.dataNascimento || "");
+
+
+    const assinaturaNova =
+        criarAssinatura(usuario);
+
+
+    for (const existente of usuarios) {
+
+        /*
+           1. TELEFONE
+           O telefone é único.
+        */
+
+        if (
+            telefone &&
+            String(existente.telefone || "").trim() ===
+            telefone
+        ) {
+
+            return {
+                duplicado: true,
+                campo: "telefone",
+                mensagem:
+                    "Este número de telefone já está registado na plataforma VidaFonte."
+            };
+        }
+
+
+        /*
+           2. NOME + DATA DE NASCIMENTO
+        */
+
+        if (
+            nome ===
+            normalizarNome(existente.nome) &&
+
+            dataNascimento ===
+            String(existente.dataNascimento || "")
+        ) {
+
+            return {
+                duplicado: true,
+                campo: "nome",
+                mensagem:
+                    "Já existe uma criança registada com este nome e esta data de nascimento."
+            };
+        }
+
+
+        /*
+           3. TODOS OS DADOS PRINCIPAIS IGUAIS
+        */
+
+        if (
+            assinaturaNova ===
+            criarAssinatura(existente)
+        ) {
+
+            return {
+                duplicado: true,
+                campo: "geral",
+                mensagem:
+                    "Estes dados já estão registados numa conta VidaFonte."
+            };
+        }
+    }
+
+
+    return {
+        duplicado: false
+    };
+}
+
+
+/* =========================================================
+   ==================== REGISTO =============================
+   ========================================================= */
 
 if (!paginaRecuperacao) {
+
+
+    /* =====================================================
+       ELEMENTOS
+       ===================================================== */
+
+    const dataNascimentoInput =
+        document.getElementById("data-nascimento");
+
+
+    const bairroInput =
+        document.getElementById("bar");
+
+
+    const generoInput =
+        document.getElementById("gener");
 
 
     /* =====================================================
@@ -106,10 +388,13 @@ if (!paginaRecuperacao) {
 
         if (!nomeInput) return false;
 
-        const nome = nomeInput.value.trim();
+        const nome =
+            nomeInput.value.trim();
+
 
         const regexNome =
             /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+
 
         if (
             nome.length < 2 ||
@@ -117,10 +402,13 @@ if (!paginaRecuperacao) {
         ) {
 
             campoInvalido(nomeInput);
+
             return false;
         }
 
+
         campoValido(nomeInput);
+
         return true;
     }
 
@@ -133,29 +421,94 @@ if (!paginaRecuperacao) {
 
         if (!dataNascimentoInput) return false;
 
+
         const data =
             dataNascimentoInput.value;
 
+
         if (!data) {
 
-            campoInvalido(dataNascimentoInput);
+            campoInvalido(
+                dataNascimentoInput
+            );
+
             return false;
         }
+
 
         const dataSelecionada =
             new Date(data + "T00:00:00");
 
-        const hoje = new Date();
 
-        hoje.setHours(0, 0, 0, 0);
+        if (isNaN(dataSelecionada.getTime())) {
 
-        if (dataSelecionada > hoje) {
+            campoInvalido(
+                dataNascimentoInput
+            );
 
-            campoInvalido(dataNascimentoInput);
             return false;
         }
 
-        campoValido(dataNascimentoInput);
+
+        const hoje =
+            new Date();
+
+
+        hoje.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+
+        /*
+           NÃO PERMITIR DATA FUTURA
+        */
+
+        if (
+            dataSelecionada >
+            hoje
+        ) {
+
+            campoInvalido(
+                dataNascimentoInput
+            );
+
+            return false;
+        }
+
+
+        /*
+           CALCULAR IDADE
+        */
+
+        const idade =
+            calcularIdade(data);
+
+
+        /*
+           REGRA VIDA FONTE:
+           SOMENTE CRIANÇAS COM MENOS DE 10 ANOS
+        */
+
+        if (
+            idade < 0 ||
+            idade >= 10
+        ) {
+
+            campoInvalido(
+                dataNascimentoInput
+            );
+
+            return false;
+        }
+
+
+        campoValido(
+            dataNascimentoInput
+        );
+
         return true;
     }
 
@@ -168,22 +521,32 @@ if (!paginaRecuperacao) {
 
         if (!bairroInput) return false;
 
+
         const bairro =
             bairroInput.value.trim();
 
+
         const regexBairro =
             /^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s.,'’\-\/]+$/;
+
 
         if (
             bairro.length < 2 ||
             !regexBairro.test(bairro)
         ) {
 
-            campoInvalido(bairroInput);
+            campoInvalido(
+                bairroInput
+            );
+
             return false;
         }
 
-        campoValido(bairroInput);
+
+        campoValido(
+            bairroInput
+        );
+
         return true;
     }
 
@@ -196,18 +559,27 @@ if (!paginaRecuperacao) {
 
         if (!generoInput) return false;
 
+
         const genero =
             generoInput.value;
+
 
         if (
             !["1", "2", "3"].includes(genero)
         ) {
 
-            campoInvalido(generoInput);
+            campoInvalido(
+                generoInput
+            );
+
             return false;
         }
 
-        campoValido(generoInput);
+
+        campoValido(
+            generoInput
+        );
+
         return true;
     }
 
@@ -220,22 +592,35 @@ if (!paginaRecuperacao) {
 
         if (!telefoneInput) return false;
 
+
         telefoneInput.value =
             telefoneInput.value.replace(/\D/g, "");
+
 
         const telefone =
             telefoneInput.value;
 
+
         const regexTelefone =
             /^(82|83|84|85|86|87)\d{7}$/;
 
-        if (!regexTelefone.test(telefone)) {
 
-            campoInvalido(telefoneInput);
+        if (
+            !regexTelefone.test(telefone)
+        ) {
+
+            campoInvalido(
+                telefoneInput
+            );
+
             return false;
         }
 
-        campoValido(telefoneInput);
+
+        campoValido(
+            telefoneInput
+        );
+
         return true;
     }
 
@@ -248,16 +633,27 @@ if (!paginaRecuperacao) {
 
         if (!senhaInput) return false;
 
+
         const senha =
             senhaInput.value;
 
-        if (senha.length < 6) {
 
-            campoInvalido(senhaInput);
+        if (
+            senha.length < 6
+        ) {
+
+            campoInvalido(
+                senhaInput
+            );
+
             return false;
         }
 
-        campoValido(senhaInput);
+
+        campoValido(
+            senhaInput
+        );
+
         return true;
     }
 
@@ -270,28 +666,40 @@ if (!paginaRecuperacao) {
 
         if (!confirmarSenhaInput) return false;
 
+
         const senha =
-            senhaInput.value;
+            senhaInput ?
+            senhaInput.value :
+            "";
+
 
         const confirmarSenha =
             confirmarSenhaInput.value;
+
 
         if (
             confirmarSenha.length < 6 ||
             confirmarSenha !== senha
         ) {
 
-            campoInvalido(confirmarSenhaInput);
+            campoInvalido(
+                confirmarSenhaInput
+            );
+
             return false;
         }
 
-        campoValido(confirmarSenhaInput);
+
+        campoValido(
+            confirmarSenhaInput
+        );
+
         return true;
     }
 
 
     /* =====================================================
-       EVENTOS DO REGISTO
+       EVENTOS
        ===================================================== */
 
     if (nomeInput) {
@@ -337,13 +745,10 @@ if (!paginaRecuperacao) {
             function () {
 
                 this.value =
-                    this.value.replace(/\D/g, "");
+                    this.value
+                        .replace(/\D/g, "")
+                        .substring(0, 9);
 
-                if (this.value.length > 9) {
-
-                    this.value =
-                        this.value.substring(0, 9);
-                }
 
                 validarTelefone();
             }
@@ -358,6 +763,7 @@ if (!paginaRecuperacao) {
             function () {
 
                 validarSenha();
+
 
                 if (
                     confirmarSenhaInput &&
@@ -386,31 +792,41 @@ if (!paginaRecuperacao) {
 
     function registrar() {
 
+        /*
+           VALIDAR TODOS OS CAMPOS
+        */
+
         const nomeValido =
             validarNome();
+
 
         const dataValida =
             validarDataNascimento();
 
+
         const bairroValido =
             validarBairro();
+
 
         const generoValido =
             validarGenero();
 
+
         const telefoneValido =
             validarTelefone();
 
+
         const senhaValida =
             validarSenha();
+
 
         const confirmacaoValida =
             validarConfirmarSenha();
 
 
-        /* =================================================
-           VERIFICAR CAMPOS
-           ================================================= */
+        /*
+           SE EXISTIR ERRO
+        */
 
         if (
             !nomeValido ||
@@ -426,35 +842,36 @@ if (!paginaRecuperacao) {
                 "Por favor, corrija os campos destacados a vermelho."
             );
 
-            return;
+            return false;
         }
 
 
-        /* =================================================
-           VERIFICAR SE JÁ EXISTE CONTA
-           ================================================= */
+        /*
+           VERIFICAR NOVAMENTE A IDADE
+        */
 
-        const usuarioExistente =
-            JSON.parse(
-                localStorage.getItem("usuario")
+        const idade =
+            calcularIdade(
+                dataNascimentoInput.value
             );
 
 
         if (
-            usuarioExistente &&
-            usuarioExistente.telefone ===
-            telefoneInput.value.trim()
+            idade < 0 ||
+            idade >= 10
         ) {
 
-            campoInvalido(telefoneInput);
-
-            alert(
-                "Este número de telefone já está registado na plataforma VidaFonte."
+            campoInvalido(
+                dataNascimentoInput
             );
 
-            telefoneInput.focus();
+            alert(
+                "A VidaFonte destina-se a crianças com menos de 10 anos. O cadastro não pode ser concluído."
+            );
 
-            return;
+            dataNascimentoInput.focus();
+
+            return false;
         }
 
 
@@ -464,11 +881,17 @@ if (!paginaRecuperacao) {
 
         const usuario = {
 
+            id:
+                gerarIdUtilizador(),
+
             nome:
                 nomeInput.value.trim(),
 
             dataNascimento:
                 dataNascimentoInput.value,
+
+            idade:
+                idade,
 
             bairro:
                 bairroInput.value.trim(),
@@ -488,8 +911,96 @@ if (!paginaRecuperacao) {
 
 
         /* =================================================
-           GUARDAR UTILIZADOR
+           OBTER TODOS OS UTILIZADORES
            ================================================= */
+
+        const usuarios =
+            obterUsuarios();
+
+
+        /* =================================================
+           VERIFICAR DUPLICADOS
+           ================================================= */
+
+        const verificacao =
+            verificarDuplicado(
+                usuario,
+                usuarios
+            );
+
+
+        if (
+            verificacao.duplicado
+        ) {
+
+            if (
+                verificacao.campo ===
+                "telefone"
+            ) {
+
+                campoInvalido(
+                    telefoneInput
+                );
+
+                telefoneInput.focus();
+
+            } else if (
+                verificacao.campo ===
+                "nome"
+            ) {
+
+                campoInvalido(
+                    nomeInput
+                );
+
+                campoInvalido(
+                    dataNascimentoInput
+                );
+
+                nomeInput.focus();
+
+            } else {
+
+                campoInvalido(
+                    nomeInput
+                );
+
+                campoInvalido(
+                    dataNascimentoInput
+                );
+            }
+
+
+            alert(
+                verificacao.mensagem
+            );
+
+            return false;
+        }
+
+
+        /* =================================================
+           ADICIONAR NOVO UTILIZADOR
+           ================================================= */
+
+        usuarios.push(
+            usuario
+        );
+
+
+        /* =================================================
+           GUARDAR LISTA COMPLETA
+           ================================================= */
+
+        guardarUsuarios(
+            usuarios
+        );
+
+
+        /*
+           "usuario" continua a ser utilizado
+           para o perfil da conta seleccionada.
+        */
 
         localStorage.setItem(
             "usuario",
@@ -515,11 +1026,14 @@ if (!paginaRecuperacao) {
         );
 
 
-        /* =================================================
+        /*
            NÃO ENTRAR AUTOMATICAMENTE
-           ================================================= */
+        */
 
-        localStorage.removeItem("logado");
+        localStorage.removeItem(
+            "logado"
+        );
+
 
         localStorage.removeItem(
             "usuarioLogado"
@@ -534,6 +1048,7 @@ if (!paginaRecuperacao) {
             document.getElementById(
                 "nomeCriancaPopup"
             );
+
 
         if (nomePopup) {
 
@@ -550,7 +1065,9 @@ if (!paginaRecuperacao) {
 
         if (popup) {
 
-            popup.classList.add("mostrar");
+            popup.classList.add(
+                "mostrar"
+            );
 
         } else {
 
@@ -559,15 +1076,18 @@ if (!paginaRecuperacao) {
                 usuario.nome +
                 " foi criada com sucesso na plataforma VidaFonte."
             );
+
+            window.location.href =
+                "index.html";
         }
+
+
+        return false;
     }
 
 
-    /* =====================================================
-       DISPONIBILIZAR REGISTRAR GLOBALMENTE
-       ===================================================== */
-
-    window.registrar = registrar;
+    window.registrar =
+        registrar;
 
 
     /* =====================================================
@@ -581,7 +1101,9 @@ if (!paginaRecuperacao) {
                 "popupSucesso"
             );
 
+
         if (!popup) return;
+
 
         popup.classList.remove(
             "mostrar"
@@ -609,39 +1131,28 @@ if (!paginaRecuperacao) {
    ================= RECUPERAÇÃO ===========================
    ========================================================= */
 
-
-/*
-   Esta parte é executada apenas na página de recuperação.
-*/
-
 if (paginaRecuperacao) {
 
 
     /* =====================================================
-       CAMPOS DA RECUPERAÇÃO
+       CAMPOS
        ===================================================== */
-
-    /*
-       ATENÇÃO:
-
-       No teu HTML atual:
-
-       data-nascimento = G-mail ou Telefone
-       gener           = método de recebimento
-       telefone       = número de telefone
-       bar             = código recebido
-       senha           = nova senha
-       confirmar-senha = confirmar nova senha
-    */
 
     const contactoRecuperacao =
         document.getElementById(
             "data-nascimento"
         );
 
+
     const codigoRecuperacao =
         document.getElementById(
             "bar"
+        );
+
+
+    const generoRecuperacao =
+        document.getElementById(
+            "gener"
         );
 
 
@@ -653,16 +1164,27 @@ if (paginaRecuperacao) {
 
         if (!nomeInput) return false;
 
+
         const nome =
             nomeInput.value.trim();
 
-        if (nome.length < 2) {
 
-            campoInvalido(nomeInput);
+        if (
+            nome.length < 2
+        ) {
+
+            campoInvalido(
+                nomeInput
+            );
+
             return false;
         }
 
-        campoValido(nomeInput);
+
+        campoValido(
+            nomeInput
+        );
+
         return true;
     }
 
@@ -673,13 +1195,21 @@ if (paginaRecuperacao) {
 
     function validarContactoRecuperacao() {
 
-        if (!contactoRecuperacao)
+        if (
+            !contactoRecuperacao
+        ) {
+
             return false;
+        }
+
 
         const contacto =
             contactoRecuperacao.value.trim();
 
-        if (contacto.length < 5) {
+
+        if (
+            contacto.length < 5
+        ) {
 
             campoInvalido(
                 contactoRecuperacao
@@ -687,6 +1217,7 @@ if (paginaRecuperacao) {
 
             return false;
         }
+
 
         campoValido(
             contactoRecuperacao
@@ -702,25 +1233,32 @@ if (paginaRecuperacao) {
 
     function validarMetodoRecuperacao() {
 
-        if (!generoInput)
+        if (
+            !generoRecuperacao
+        ) {
+
             return false;
+        }
+
 
         const metodo =
-            generoInput.value;
+            generoRecuperacao.value;
+
 
         if (
             !["1", "2"].includes(metodo)
         ) {
 
             campoInvalido(
-                generoInput
+                generoRecuperacao
             );
 
             return false;
         }
 
+
         campoValido(
-            generoInput
+            generoRecuperacao
         );
 
         return true;
@@ -733,13 +1271,27 @@ if (paginaRecuperacao) {
 
     function validarCodigoRecuperacao() {
 
-        if (!codigoRecuperacao)
+        if (
+            !codigoRecuperacao
+        ) {
+
             return false;
+        }
+
+
+        codigoRecuperacao.value =
+            codigoRecuperacao.value
+                .replace(/\D/g, "")
+                .substring(0, 6);
+
 
         const codigo =
             codigoRecuperacao.value.trim();
 
-        if (codigo.length < 4) {
+
+        if (
+            codigo.length !== 6
+        ) {
 
             campoInvalido(
                 codigoRecuperacao
@@ -747,6 +1299,7 @@ if (paginaRecuperacao) {
 
             return false;
         }
+
 
         campoValido(
             codigoRecuperacao
@@ -762,8 +1315,8 @@ if (paginaRecuperacao) {
 
     function validarNovaSenha() {
 
-        if (!senhaInput)
-            return false;
+        if (!senhaInput) return false;
+
 
         if (
             senhaInput.value.length < 6
@@ -775,6 +1328,7 @@ if (paginaRecuperacao) {
 
             return false;
         }
+
 
         campoValido(
             senhaInput
@@ -790,11 +1344,17 @@ if (paginaRecuperacao) {
 
     function validarNovaConfirmacao() {
 
-        if (!confirmarSenhaInput)
+        if (
+            !confirmarSenhaInput
+        ) {
+
             return false;
+        }
+
 
         if (
             confirmarSenhaInput.value.length < 6 ||
+
             confirmarSenhaInput.value !==
             senhaInput.value
         ) {
@@ -805,6 +1365,7 @@ if (paginaRecuperacao) {
 
             return false;
         }
+
 
         campoValido(
             confirmarSenhaInput
@@ -836,9 +1397,9 @@ if (paginaRecuperacao) {
     }
 
 
-    if (generoInput) {
+    if (generoRecuperacao) {
 
-        generoInput.addEventListener(
+        generoRecuperacao.addEventListener(
             "change",
             validarMetodoRecuperacao
         );
@@ -862,6 +1423,7 @@ if (paginaRecuperacao) {
 
                 validarNovaSenha();
 
+
                 if (
                     confirmarSenhaInput &&
                     confirmarSenhaInput.value
@@ -884,10 +1446,185 @@ if (paginaRecuperacao) {
 
 
     /* =====================================================
-       GERAR CÓDIGO DE RECUPERAÇÃO
+       LOCALIZAR CONTA PARA RECUPERAÇÃO
+       ===================================================== */
+
+    function localizarContaRecuperacao() {
+
+        const nome =
+            normalizarNome(
+                nomeInput ?
+                nomeInput.value :
+                ""
+            );
+
+
+        const contacto =
+            contactoRecuperacao ?
+            contactoRecuperacao.value.trim() :
+            "";
+
+
+        const metodo =
+            generoRecuperacao ?
+            generoRecuperacao.value :
+            "";
+
+
+        if (!nome || !contacto || !metodo) {
+
+            return null;
+        }
+
+
+        const usuarios =
+            obterUsuarios();
+
+
+        for (
+            const usuario of usuarios
+        ) {
+
+            if (
+                normalizarNome(
+                    usuario.nome
+                ) !== nome
+            ) {
+
+                continue;
+            }
+
+
+            /*
+               TELEFONE
+            */
+
+            if (
+                metodo === "1"
+            ) {
+
+                const telefoneInformado =
+                    contacto.replace(
+                        /\D/g,
+                        ""
+                    );
+
+
+                const telefoneGuardado =
+                    String(
+                        usuario.telefone || ""
+                    ).replace(
+                        /\D/g,
+                        ""
+                    );
+
+
+                if (
+                    telefoneInformado ===
+                    telefoneGuardado
+                ) {
+
+                    return usuario;
+                }
+            }
+
+
+            /*
+               G-MAIL
+            */
+
+            if (
+                metodo === "2"
+            ) {
+
+                const emailGuardado =
+                    String(
+                        usuario.email || ""
+                    )
+                    .trim()
+                    .toLowerCase();
+
+
+                if (
+                    emailGuardado &&
+                    contacto.toLowerCase() ===
+                    emailGuardado
+                ) {
+
+                    return usuario;
+                }
+            }
+        }
+
+
+        return null;
+    }
+
+
+    /* =====================================================
+       GERAR CÓDIGO
        ===================================================== */
 
     function gerarCodigoRecuperacao() {
+
+        /*
+           Primeiro validar os dados
+           necessários para localizar a conta.
+        */
+
+        const nomeValido =
+            validarNomeRecuperacao();
+
+
+        const contactoValido =
+            validarContactoRecuperacao();
+
+
+        const metodoValido =
+            validarMetodoRecuperacao();
+
+
+        if (
+            !nomeValido ||
+            !contactoValido ||
+            !metodoValido
+        ) {
+
+            alert(
+                "Preencha correctamente o nome, o contacto e o método de recuperação."
+            );
+
+            return false;
+        }
+
+
+        const usuario =
+            localizarContaRecuperacao();
+
+
+        if (!usuario) {
+
+            campoInvalido(
+                nomeInput
+            );
+
+
+            campoInvalido(
+                contactoRecuperacao
+            );
+
+
+            alert(
+                "Não foi encontrada nenhuma conta com os dados informados."
+            );
+
+            return false;
+        }
+
+
+        /*
+           GERAR CÓDIGO DE 6 DÍGITOS
+        */
 
         const codigo =
             Math.floor(
@@ -895,6 +1632,10 @@ if (paginaRecuperacao) {
                 Math.random() * 900000
             ).toString();
 
+
+        /*
+           Guardar código
+        */
 
         localStorage.setItem(
             "codigoRecuperacao",
@@ -909,20 +1650,96 @@ if (paginaRecuperacao) {
 
 
         /*
-           Isto é apenas para testes locais.
+           Guardar ID da conta a recuperar.
+        */
 
-           Numa versão real, o código deve ser enviado
-           por SMS ou Gmail através de um servidor.
+        localStorage.setItem(
+            "codigoRecuperacaoUsuarioId",
+            usuario.id || ""
+        );
+
+
+        /*
+           MODO DE TESTE
+
+           Em produção, este código deverá ser
+           enviado através de um servidor/SMS/Gmail.
         */
 
         alert(
-            "Código de recuperação gerado para teste: " +
+            "Código de recuperação para teste: " +
             codigo
         );
 
 
-        return codigo;
+        if (codigoRecuperacao) {
+
+            codigoRecuperacao.focus();
+        }
+
+
+        return true;
     }
+
+
+    /* =====================================================
+       CRIAR BOTÃO "ENVIAR CÓDIGO"
+       ===================================================== */
+
+    function criarBotaoEnviarCodigo() {
+
+        if (
+            document.getElementById(
+                "btnEnviarCodigo"
+            )
+        ) {
+
+            return;
+        }
+
+
+        if (!codigoRecuperacao) {
+
+            return;
+        }
+
+
+        const botao =
+            document.createElement(
+                "button"
+            );
+
+
+        botao.type =
+            "button";
+
+
+        botao.id =
+            "btnEnviarCodigo";
+
+
+        botao.className =
+            "btn-enviar-codigo";
+
+
+        botao.textContent =
+            "Enviar código";
+
+
+        botao.addEventListener(
+            "click",
+            gerarCodigoRecuperacao
+        );
+
+
+        codigoRecuperacao.parentNode.insertBefore(
+            botao,
+            codigoRecuperacao
+        );
+    }
+
+
+    criarBotaoEnviarCodigo();
 
 
     /* =====================================================
@@ -931,25 +1748,29 @@ if (paginaRecuperacao) {
 
     function recuperarSenha() {
 
-
-        /* =================================================
+        /*
            VALIDAR CAMPOS
-           ================================================= */
+        */
 
         const nomeValido =
             validarNomeRecuperacao();
 
+
         const contactoValido =
             validarContactoRecuperacao();
+
 
         const metodoValido =
             validarMetodoRecuperacao();
 
+
         const codigoValido =
             validarCodigoRecuperacao();
 
+
         const senhaValida =
             validarNovaSenha();
+
 
         const confirmacaoValida =
             validarNovaConfirmacao();
@@ -968,155 +1789,12 @@ if (paginaRecuperacao) {
                 "Por favor, corrija os campos destacados a vermelho."
             );
 
-            return;
+            return false;
         }
 
 
         /* =================================================
-           PROCURAR CONTA EXISTENTE
-           ================================================= */
-
-        const usuario =
-            JSON.parse(
-                localStorage.getItem(
-                    "usuario"
-                )
-            );
-
-
-        if (!usuario) {
-
-            alert(
-                "Não foi encontrada nenhuma conta registada neste dispositivo."
-            );
-
-            return;
-        }
-
-
-        /* =================================================
-           VERIFICAR NOME
-           ================================================= */
-
-        const nomeInformado =
-            nomeInput.value
-                .trim()
-                .toLowerCase();
-
-        const nomeGuardado =
-            (usuario.nome || "")
-                .trim()
-                .toLowerCase();
-
-
-        if (
-            nomeInformado !== nomeGuardado
-        ) {
-
-            campoInvalido(nomeInput);
-
-            alert(
-                "O nome informado não corresponde à conta registada."
-            );
-
-            nomeInput.focus();
-
-            return;
-        }
-
-
-        /* =================================================
-           VERIFICAR CONTACTO
-           ================================================= */
-
-        const contacto =
-            contactoRecuperacao.value
-                .trim();
-
-
-        const telefoneGuardado =
-            usuario.telefone || "";
-
-
-        const emailGuardado =
-            usuario.email || "";
-
-
-        /*
-           Método 1 = telefone
-           Método 2 = Gmail
-        */
-
-        if (
-            generoInput.value === "1"
-        ) {
-
-            const telefoneLimpo =
-                contacto.replace(/\D/g, "");
-
-            if (
-                telefoneLimpo !==
-                telefoneGuardado
-            ) {
-
-                campoInvalido(
-                    contactoRecuperacao
-                );
-
-                alert(
-                    "O número de telefone não corresponde à conta registada."
-                );
-
-                contactoRecuperacao.focus();
-
-                return;
-            }
-
-        } else {
-
-            /*
-               Gmail só pode ser validado se o
-               utilizador tiver um email guardado.
-            */
-
-            if (!emailGuardado) {
-
-                campoInvalido(
-                    contactoRecuperacao
-                );
-
-                alert(
-                    "Esta conta não possui um G-mail registado. Utilize o número de telefone."
-                );
-
-                contactoRecuperacao.focus();
-
-                return;
-            }
-
-
-            if (
-                contacto.toLowerCase() !==
-                emailGuardado.toLowerCase()
-            ) {
-
-                campoInvalido(
-                    contactoRecuperacao
-                );
-
-                alert(
-                    "O G-mail informado não corresponde à conta registada."
-                );
-
-                contactoRecuperacao.focus();
-
-                return;
-            }
-        }
-
-
-        /* =================================================
-           VERIFICAR CÓDIGO
+           OBTER CÓDIGO
            ================================================= */
 
         const codigoGuardado =
@@ -1127,13 +1805,22 @@ if (paginaRecuperacao) {
 
         if (!codigoGuardado) {
 
-            alert(
-                "Ainda não foi gerado um código de recuperação."
+            campoInvalido(
+                codigoRecuperacao
             );
 
-            return;
+
+            alert(
+                "Primeiro clique em 'Enviar código' para receber o código de recuperação."
+            );
+
+            return false;
         }
 
+
+        /* =================================================
+           VERIFICAR CÓDIGO
+           ================================================= */
 
         if (
             codigoRecuperacao.value.trim() !==
@@ -1144,18 +1831,20 @@ if (paginaRecuperacao) {
                 codigoRecuperacao
             );
 
+
             alert(
-                "O código de recuperação está incorreto."
+                "O código de recuperação está incorrecto."
             );
+
 
             codigoRecuperacao.focus();
 
-            return;
+            return false;
         }
 
 
         /* =================================================
-           VERIFICAR EXPIRAÇÃO DO CÓDIGO
+           VERIFICAR EXPIRAÇÃO
            ================================================= */
 
         const dataCodigo =
@@ -1171,7 +1860,7 @@ if (paginaRecuperacao) {
 
 
         if (
-            dataCodigo &&
+            !dataCodigo ||
             Date.now() - dataCodigo >
             dezMinutos
         ) {
@@ -1180,19 +1869,70 @@ if (paginaRecuperacao) {
                 "codigoRecuperacao"
             );
 
+
             localStorage.removeItem(
                 "codigoRecuperacaoData"
             );
+
+
+            localStorage.removeItem(
+                "codigoRecuperacaoUsuarioId"
+            );
+
 
             campoInvalido(
                 codigoRecuperacao
             );
 
+
             alert(
                 "O código de recuperação expirou. Solicite um novo código."
             );
 
-            return;
+
+            return false;
+        }
+
+
+        /* =================================================
+           LOCALIZAR UTILIZADOR
+           ================================================= */
+
+        const usuario =
+            localizarContaRecuperacao();
+
+
+        if (!usuario) {
+
+            alert(
+                "Os dados informados não correspondem a uma conta VidaFonte."
+            );
+
+            return false;
+        }
+
+
+        /* =================================================
+           VERIFICAR UTILIZADOR DO CÓDIGO
+           ================================================= */
+
+        const usuarioIdCodigo =
+            localStorage.getItem(
+                "codigoRecuperacaoUsuarioId"
+            );
+
+
+        if (
+            usuarioIdCodigo &&
+            usuario.id &&
+            usuarioIdCodigo !== usuario.id
+        ) {
+
+            alert(
+                "O código de recuperação não corresponde a esta conta."
+            );
+
+            return false;
         }
 
 
@@ -1209,7 +1949,48 @@ if (paginaRecuperacao) {
 
 
         /* =================================================
-           GUARDAR NOVAMENTE
+           ACTUALIZAR LISTA
+           ================================================= */
+
+        const usuarios =
+            obterUsuarios();
+
+
+        const indice =
+            usuarios.findIndex(
+                function (u) {
+
+                    return (
+                        u.id === usuario.id
+                    );
+
+                }
+            );
+
+
+        if (
+            indice === -1
+        ) {
+
+            alert(
+                "Não foi possível actualizar a conta."
+            );
+
+            return false;
+        }
+
+
+        usuarios[indice] =
+            usuario;
+
+
+        guardarUsuarios(
+            usuarios
+        );
+
+
+        /* =================================================
+           ACTUALIZAR UTILIZADOR ACTUAL
            ================================================= */
 
         localStorage.setItem(
@@ -1217,10 +1998,6 @@ if (paginaRecuperacao) {
             JSON.stringify(usuario)
         );
 
-
-        /*
-           Também actualiza os dados usados pelo perfil.
-        */
 
         localStorage.setItem(
             "dadosBebe",
@@ -1241,25 +2018,32 @@ if (paginaRecuperacao) {
 
 
         /* =================================================
-           LIMPAR CÓDIGO USADO
+           LIMPAR CÓDIGO
            ================================================= */
 
         localStorage.removeItem(
             "codigoRecuperacao"
         );
 
+
         localStorage.removeItem(
             "codigoRecuperacaoData"
         );
 
 
+        localStorage.removeItem(
+            "codigoRecuperacaoUsuarioId"
+        );
+
+
         /* =================================================
-           GARANTIR QUE NÃO FICA LOGADO
+           NÃO ENTRAR AUTOMATICAMENTE
            ================================================= */
 
         localStorage.removeItem(
             "logado"
         );
+
 
         localStorage.removeItem(
             "usuarioLogado"
@@ -1277,6 +2061,9 @@ if (paginaRecuperacao) {
 
         window.location.href =
             "index.html";
+
+
+        return false;
     }
 
 
@@ -1309,6 +2096,7 @@ if (formulario) {
 
             event.preventDefault();
 
+
             if (paginaRecuperacao) {
 
                 recuperarSenha();
@@ -1320,3 +2108,57 @@ if (formulario) {
         }
     );
 }
+
+
+/* =========================================================
+   EVITAR PROBLEMA COM BOTÕES DENTRO DE <a>
+   ========================================================= */
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        const botao =
+            event.target.closest(
+                "button"
+            );
+
+
+        if (!botao) return;
+
+
+        /*
+           Na recuperação, o botão principal
+           deve chamar recuperarSenha().
+        */
+
+        if (
+            paginaRecuperacao &&
+            (
+                botao.id !==
+                "btnEnviarCodigo"
+            )
+        ) {
+
+            const texto =
+                (
+                    botao.textContent ||
+                    ""
+                )
+                .trim()
+                .toLowerCase();
+
+
+            if (
+                texto.includes("recuperar") ||
+                texto.includes("alterar") ||
+                texto.includes("senha")
+            ) {
+
+                event.preventDefault();
+
+                recuperarSenha();
+            }
+        }
+    }
+);
