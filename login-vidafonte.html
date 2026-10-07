@@ -16,8 +16,8 @@
 
                 <img src="conceito-de-design-do-logotipo-da-super-nutricao_761413-6186.avif" width="100" height="100">
 
-
             </div>
+
             <h2>REGISTRO DA CRIANÇA</h2>
 
             <input
@@ -25,12 +25,12 @@
                 id="nome"
                 placeholder="Nome completo da criança"
                 class="input"
+                autocomplete="name"
             >
 
             <input
                 type="date"
                 id="data-nascimento"
-                placeholder="Data de Nascimento"
                 class="input"
             >
 
@@ -39,8 +39,8 @@
                 id="bar"
                 placeholder="Onde vive"
                 class="input"
+                autocomplete="address-level2"
             >
-
 
             <select id="gener" class="input">
                 <option value="">Escolha o genero</option>
@@ -49,7 +49,6 @@
                 <option value="3">Outro</option>
             </select>
 
-
             <input
                 type="tel"
                 id="telefone"
@@ -57,6 +56,7 @@
                 class="input"
                 maxlength="9"
                 inputmode="numeric"
+                autocomplete="tel"
             >
 
             <input
@@ -64,6 +64,8 @@
                 id="senha"
                 placeholder="Digite a Senha"
                 class="input"
+                minlength="6"
+                autocomplete="new-password"
             >
 
             <input
@@ -71,8 +73,9 @@
                 id="confirmar-senha"
                 placeholder="Confirmar Senha"
                 class="input"
+                minlength="6"
+                autocomplete="new-password"
             >
-
 
             <button
                 type="button"
@@ -81,15 +84,50 @@
                 REGISTRAR
             </button>
 
-
             <div class="links">
                 Já tem uma conta? <a href="index.html"> Faça login</a>
             </div>
+
         </div>
     </div>
 
-    <script src="tresp.js"></script>
-</body>
 
+    <!-- POPUP DE SUCESSO -->
+
+    <div id="popupSucesso" class="popup-overlay">
+
+        <div class="popup-box">
+
+            <div class="popup-icon">
+                ✓
+            </div>
+
+            <h2>Parabéns! 🎉</h2>
+
+            <p>
+                Acabou de criar a sua conta na
+                <strong>plataforma VidaFonte</strong>.
+            </p>
+
+            <p>
+                Criança registada:
+            </p>
+
+            <h3 id="nomeCriancaPopup"></h3>
+
+            <button
+                type="button"
+                onclick="fecharPopup()">
+                CONTINUAR
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="tresp.js"></script>
+
+</body>
 
 </html>
